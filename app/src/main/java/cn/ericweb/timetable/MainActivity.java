@@ -8,12 +8,16 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -82,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void queryClassTable(View button) {
+        tableLayout = new TableLayout(this);
+
         EditText userIdEditText = (EditText) findViewById(R.id.userId);
         EditText pwdEditText = (EditText) findViewById(R.id.pwd);
         String userId = userIdEditText.getText().toString();
@@ -111,10 +117,10 @@ public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.ericweb.timetable.MESSAGE";
     public TextView result;
     public ViewGroup mainLayout;
-
-    class QueryClassTable extends AsyncTask<String[], Void, String> {
+    public TableLayout tableLayout;
+    class QueryClassTable extends AsyncTask<String[], Void, ClassTable> {
         @Override
-        protected String doInBackground(String[]... strings) {
+        protected ClassTable doInBackground(String[]... strings) {
             try {
                 URL url = new URL("http://www.ericweb.cn:8080/test");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -136,20 +142,79 @@ public class MainActivity extends AppCompatActivity {
 
                 Gson gson = new Gson();
 
-                ClassTable json2ClassTable = gson.fromJson(stringBuilder.toString(), ClassTable.class);
-
-                return json2ClassTable.getDayInClassTable().get(0).getDayTable().get(0).get(0).toString();
+                return gson.fromJson(stringBuilder.toString(), ClassTable.class);
             } catch (Exception e) {
                 e.printStackTrace();
-                return "fail";
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            result.setText(s);
+        protected void onPostExecute(ClassTable classtable) {
+            // config tablelayout
+            tableLayout.setStretchAllColumns(true);
+            tableLayout.setShrinkAllColumns(true);
+            // set context
+            Context context = tableLayout.getContext();
+
+
+            TableRow dayRow = new TableRow(context);
+
+            TextView classNumberCol = new TextView(context);
+            classNumberCol.setText("NO.");
+            classNumberCol.setGravity(Gravity.CENTER);
+            dayRow.addView(classNumberCol);
+
+            for (int i = 0; i < 7; i++) {
+                TextView dayText = new TextView(context);
+                int tempCount = i + 1;
+                dayText.setGravity(Gravity.CENTER);
+                dayText.setText(tempCount + "");
+                dayRow.addView(dayText);
+            }
+            tableLayout.addView(dayRow);
+
+
+            int classNumberPerDay = classtable.getCourseNumberPerDay();
+            for (int countClassIndex = 0; countClassIndex < classNumberPerDay; countClassIndex++) {
+                TableRow classRow = new TableRow(context);
+                TextView classIndex = new TextView(context);
+                int classIndexInt = countClassIndex + 1;
+                classIndex.setText("" + classIndexInt);
+                classIndex.setGravity(Gravity.CENTER);
+                classIndex.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1));
+
+                classRow.addView(classIndex);
+
+                for (int countDay = 0; countDay < 7; countDay++) {
+                    String courseName;
+                    String address;
+                    try {
+                        courseName = classtable.getDayInClassTable().get(countDay).getDayTable().get(countClassIndex).get(0).getCourse().getCourseName();
+                        address = classtable.getDayInClassTable().get(countDay).getDayTable().get(countClassIndex).get(0).getCourse().getAddress();
+                    } catch (Exception e) {
+                        courseName = "";
+                        address = "";
+                    }
+
+                    String courseInfo = courseName;
+                    if (!address.isEmpty()) {
+                        courseInfo = courseInfo + "@" + address;
+                    }
+                    TextView course = new TextView(context);
+                    course.setGravity(Gravity.CENTER);
+                    course.setText(courseInfo);
+                    course.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1));
+//                    course.setText("中文中文中文中文");
+                    classRow.addView(course);
+                }
+                tableLayout.addView(classRow);
+            }
+
+
             mainLayout.removeAllViewsInLayout();
-            mainLayout.addView(result);
+            mainLayout.addView(tableLayout);
+
         }
     }
 }

@@ -51,6 +51,36 @@
             android:orientation="vertical"
             android:padding="30dp">
 
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stretchColumns="*"
+                android:shrinkColumns="*">
+
+                <TableRow>
+                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
+                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
+                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
+                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
+                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
+                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
+                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
+                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
+
+
+                </TableRow>
+
+                <!--<TableRow>-->
+
+                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
+                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
+                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
+                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
+                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
+                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
+
+                <!--</TableRow>-->
+            </TableLayout>
         </LinearLayout>
     </ScrollView>
 
