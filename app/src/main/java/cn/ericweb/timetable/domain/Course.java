@@ -12,6 +12,12 @@ public class Course implements Serializable{
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (null == obj) {
+            return false;
+        }
         if (obj.getClass().equals(this.getClass())) {
             Course other = (Course) obj;
             return courseName.equals(other.getCourseName()) && teacher.equals(other.getTeacher()) && address.equals(other.getAddress());
@@ -31,7 +37,7 @@ public class Course implements Serializable{
 
     @Override
     public String toString() {
-        return "" + courseName + " " + address;
+        return courseName + "@" + address;
     }
     public void setCourseName(String _courseName) {
         courseName = _courseName;

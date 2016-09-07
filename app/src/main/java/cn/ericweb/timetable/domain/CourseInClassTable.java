@@ -1,28 +1,3 @@
-/*
- * Copyright (c) 2016, eric
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
 package cn.ericweb.timetable.domain;
 
 import java.io.Serializable;
@@ -37,10 +12,47 @@ public class CourseInClassTable implements Serializable {
     private Course course;
     private String timeArrangementForCourse;
 
+    public CourseInClassTable () {
+        course = null;
+        timeArrangementForCourse = "";
+    }
+    public boolean isCourseExistInWeek(int _week) {
+        try {
+            if ("1".charAt(0) == timeArrangementForCourse.charAt(_week)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (null == obj) {
+            return false;
+        }
+        if (obj.getClass().equals(this.getClass())) {
+            CourseInClassTable other = (CourseInClassTable) obj;
+            return course.equals(other.getCourse()) && timeArrangementForCourse.equals(other.getTimeArrangementForCourse());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.course != null ? this.course.hashCode() : 0);
+        hash = 89 * hash + (this.timeArrangementForCourse != null ? this.timeArrangementForCourse.hashCode() : 0);
+        return hash;
+    }
     @Override
     public String toString() {
-        return "++" + course.toString() + "==" + timeArrangementForCourse + "++";
-//        return "hello";
+        return course.toString();
     }
 
     public void setCourse(Course _course) {

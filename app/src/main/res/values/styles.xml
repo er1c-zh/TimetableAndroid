@@ -1,21 +1,20 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="theme_default" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="timetable_light.Base" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="theme_default.NoActionBar">
-        <item name="windowActionBar">false</item>
+    <style name="timetable_light.NoActionBar" parent="@style/timetable_light.Base">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <!--set color-->
+        <item name="android:textColor">@color/colorTitle</item>
     </style>
-
-    <style name="theme_default.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="theme_default.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 
 </resources>

@@ -2,6 +2,7 @@ package cn.ericweb.timetable;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -16,13 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
@@ -44,177 +46,53 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        myToolbar.setSubtitle(R.string.version_info);
+        myToolbar.setTitleTextColor(getResources().getColor(R.color.colorTitle));
+        myToolbar.setSubtitleTextColor(getResources().getColor(R.color.colorTitle));
         setSupportActionBar(myToolbar);
 
-        result = new TextView(this);
-        mainLayout = (ViewGroup) findViewById(R.id.query_result);
-    }
 
-    /**
-     * 创建菜单
-     *
-     * @param menu
-     * @return
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    /**
-     * reflect on Options was clicked
-     *
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.MenuSetting:
-                Intent intentSettings = new Intent(this, SettingsActivity.class);
-                startActivity(intentSettings);
-                return true;
-            case R.id.Login:
-                Intent intentLogin = new Intent(this, Login.class);
-                startActivity(intentLogin);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void queryClassTable(View button) {
-        tableLayout = new TableLayout(this);
-
-        EditText userIdEditText = (EditText) findViewById(R.id.userId);
-        EditText pwdEditText = (EditText) findViewById(R.id.pwd);
-        String userId = userIdEditText.getText().toString();
-        String pwd = pwdEditText.getText().toString();
-
-        result.setText("Querying...");
-        mainLayout.removeAllViewsInLayout();
-        mainLayout.addView(result);
-
-        if (!userId.isEmpty() && !pwd.isEmpty()) {
-            ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-            if (networkInfo == null || !networkInfo.isConnected()) {
-                result.setText("Network error!");
-                mainLayout.removeAllViewsInLayout();
-                mainLayout.addView(result);
-            } else {
-                String[] queryInfo = new String[]{userId, pwd};
-                new QueryClassTable().execute(queryInfo);
-            }
-        }
-    }
-
-    /**
-     * the Key of Intent to pass input's value
-     */
-    public final static String EXTRA_MESSAGE = "com.ericweb.timetable.MESSAGE";
-    public TextView result;
-    public ViewGroup mainLayout;
-    public TableLayout tableLayout;
-    class QueryClassTable extends AsyncTask<String[], Void, ClassTable> {
-        @Override
-        protected ClassTable doInBackground(String[]... strings) {
-            try {
-                URL url = new URL("http://www.ericweb.cn:8080/test");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
-
-                conn.connect();
-                PrintWriter out = new PrintWriter(conn.getOutputStream());
-                out.print("userid=" + strings[0][0] + "&pwd=" + strings[0][1] + "&isPhone=true&year=2016&session=1&submit=query");
-                out.flush();
-                out.close();
-
-                Scanner in = new Scanner(conn.getInputStream());
-                StringBuilder stringBuilder = new StringBuilder();
-                while (in.hasNext()) {
-                    stringBuilder.append(in.next());
-                }
-
-                Gson gson = new Gson();
-
-                return gson.fromJson(stringBuilder.toString(), ClassTable.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ClassTable classtable) {
-            // config tablelayout
-            tableLayout.setStretchAllColumns(true);
+        //check if table already exist
+        SharedPreferences sharedPref = this.getSharedPreferences("CLASS_TABLE", Context.MODE_PRIVATE);
+        if (!sharedPref.contains("classtable")) {
+            Intent intent = new Intent(this, cn.ericweb.timetable.QueryClassTable.class);
+            startActivity(intent);
+        } else {
+            ScrollView scrollView = (ScrollView) findViewById(R.id.main_scroll_view);
+            TableLayout tableLayout = new TableLayout(this);
+            tableLayout.setPadding(16, 0, 16, 0);
             tableLayout.setShrinkAllColumns(true);
-            // set context
-            Context context = tableLayout.getContext();
 
+            // 标题
+            TableRow tableTitleRow = new TableRow(this);
+            TextView tableTitleTextView = new TextView(this);
+            tableTitleTextView.setText("title");
+            tableTitleTextView.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
+            tableTitleTextView.setGravity(Gravity.CENTER);
+            tableTitleRow.addView(tableTitleTextView);
+            tableLayout.addView(tableTitleRow);
 
-            TableRow dayRow = new TableRow(context);
-
-            TextView classNumberCol = new TextView(context);
-            classNumberCol.setText("NO.");
-            classNumberCol.setGravity(Gravity.CENTER);
-            dayRow.addView(classNumberCol);
-
-            for (int i = 0; i < 7; i++) {
-                TextView dayText = new TextView(context);
-                int tempCount = i + 1;
-                dayText.setGravity(Gravity.CENTER);
-                dayText.setText(tempCount + "");
-                dayRow.addView(dayText);
-            }
-            tableLayout.addView(dayRow);
-
-
-            int classNumberPerDay = classtable.getCourseNumberPerDay();
-            for (int countClassIndex = 0; countClassIndex < classNumberPerDay; countClassIndex++) {
-                TableRow classRow = new TableRow(context);
-                TextView classIndex = new TextView(context);
-                int classIndexInt = countClassIndex + 1;
-                classIndex.setText("" + classIndexInt);
-                classIndex.setGravity(Gravity.CENTER);
-                classIndex.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1));
-
-                classRow.addView(classIndex);
-
-                for (int countDay = 0; countDay < 7; countDay++) {
-                    String courseName;
-                    String address;
+            // 课程表
+            Gson gson = new Gson();
+            ClassTable classTable = gson.fromJson(sharedPref.getString("classtable", ""), ClassTable.class);
+            for (int classIndex = 0; classIndex < classTable.getCourseNumberPerDay(); classIndex++) {
+                TableRow row = new TableRow(this);
+                for (int day = 0; day < 5; day++) {
+                    TextView aClass = new TextView(this);
+                    aClass.setGravity(Gravity.CENTER);
+                    aClass.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
                     try {
-                        courseName = classtable.getDayInClassTable().get(countDay).getDayTable().get(countClassIndex).get(0).getCourse().getCourseName();
-                        address = classtable.getDayInClassTable().get(countDay).getDayTable().get(countClassIndex).get(0).getCourse().getAddress();
+                        String temp = classTable.getCourseInClassTable(day, classIndex).toString();
+                        aClass.setText(temp);
                     } catch (Exception e) {
-                        courseName = "";
-                        address = "";
+                        aClass.setText(" ");
                     }
-
-                    String courseInfo = courseName;
-                    if (!address.isEmpty()) {
-                        courseInfo = courseInfo + "@" + address;
-                    }
-                    TextView course = new TextView(context);
-                    course.setGravity(Gravity.CENTER);
-                    course.setText(courseInfo);
-                    course.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1));
-//                    course.setText("中文中文中文中文");
-                    classRow.addView(course);
+                    row.addView(aClass);
                 }
-                tableLayout.addView(classRow);
+                tableLayout.addView(row);
             }
 
-
-            mainLayout.removeAllViewsInLayout();
-            mainLayout.addView(tableLayout);
-
+            scrollView.addView(tableLayout);
         }
     }
 }

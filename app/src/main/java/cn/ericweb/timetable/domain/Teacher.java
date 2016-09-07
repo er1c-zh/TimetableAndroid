@@ -11,7 +11,17 @@ public class Teacher implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return name;
+    }
+    @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (null == obj) {
+            return false;
+        }
         if (obj.getClass().equals(this.getClass())) {
             Teacher other = (Teacher) obj;
             return other.getEmail().equals(email) && other.getName().equals(name) && other.getPhoneNumber().equals(phoneNumber);

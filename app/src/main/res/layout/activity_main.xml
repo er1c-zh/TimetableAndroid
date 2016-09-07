@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -13,75 +14,10 @@
         android:elevation="5dp"
         android:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="30dp">
-
-        <EditText
-            android:id="@+id/userId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/query_class_table_userId" />
-
-        <EditText
-            android:id="@+id/pwd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/query_class_table_pwd"
-            android:inputType="textPassword" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:onClick="queryClassTable"
-            android:text="@string/query_class_table_button" />
-    </LinearLayout>
-
     <ScrollView
+        android:id="@+id/main_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/query_result"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="30dp">
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:stretchColumns="*"
-                android:shrinkColumns="*">
-
-                <TableRow>
-                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
-                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
-                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
-                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
-                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
-                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
-                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
-                    <TextView android:text="中文中文中文中文中文中文中文中文中文中文" android:layout_weight="1" android:gravity="center"/>
-
-
-                </TableRow>
-
-                <!--<TableRow>-->
-
-                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
-                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
-                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
-                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
-                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
-                    <!--<Button android:hint="button" android:layout_weight="1"/>-->
-
-                <!--</TableRow>-->
-            </TableLayout>
-        </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
