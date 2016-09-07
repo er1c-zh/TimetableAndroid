@@ -9,17 +9,11 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
 
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
@@ -37,12 +31,13 @@ public class QueryClassTable extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_query_class_table);
 
+//        布置toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.query_toolbar);
         toolbar.setTitle("查询");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorTitle));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorText));
         setSupportActionBar(toolbar);
 
-        // 初始化指向main的inent
+        // 初始化指向main的intent
         intent2Main = new Intent(this, cn.ericweb.timetable.MainActivity.class);
 
         SharedPreferences sharedPref = getSharedPreferences("CLASS_TABLE", Context.MODE_PRIVATE);
@@ -52,11 +47,12 @@ public class QueryClassTable extends AppCompatActivity {
         } else {
             temp.setText("none");
         }
+
+        //初始化查询状态的View的指向
+        queryStatus = (TextView) findViewById(R.id.query_status);
     }
 
     public void queryClassTable(View button) {
-        tableLayout = new TableLayout(this);
-
         EditText userIdEditText = (EditText) findViewById(R.id.query_userId);
         EditText pwdEditText = (EditText) findViewById(R.id.query_pwd);
         String userId = userIdEditText.getText().toString();
@@ -66,31 +62,35 @@ public class QueryClassTable extends AppCompatActivity {
             ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
             if (networkInfo == null || !networkInfo.isConnected()) {
-                result.setText("Network error!");
-                mainLayout.removeAllViewsInLayout();
-                mainLayout.addView(result);
+                queryStatus.setText("Network error!");
             } else {
+                queryStatus.setText("开始链接网络查询");
                 String[] queryInfo = new String[]{userId, pwd};
                 new Query().execute(queryInfo);
             }
         }
     }
 
-    private void setClasstable2SharedPreference(String jsonClasstable) {
+    private boolean setClasstable2SharedPreference(String jsonClasstable) {
         Gson gson = new Gson();
+        try {
+            ClassTable temp = gson.fromJson(jsonClasstable, ClassTable.class);
+        } catch (Exception e) {
+            queryStatus.setText("数据出现了错误===" + jsonClasstable);
+            return false;
+        }
         SharedPreferences sharedPref = this.getSharedPreferences("CLASS_TABLE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("classtable", jsonClasstable);
         editor.commit();
+        return true;
     }
 
     /**
      * the Key of Intent to pass input's value
      */
     public final static String EXTRA_MESSAGE = "com.ericweb.timetable.MESSAGE";
-    public TextView result;
-    public ViewGroup mainLayout;
-    public TableLayout tableLayout;
+    public TextView queryStatus;
 
     class Query extends AsyncTask<String[], Void, String> {
         @Override
@@ -122,10 +122,9 @@ public class QueryClassTable extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String jsonClasstable) {
-            setClasstable2SharedPreference(jsonClasstable);
-//            Intent intent = new Intent(this, cn.ericweb.timetable.MainActivity.class);
-            startActivity(intent2Main);
-            System.out.println("hello");
+            if (true == setClasstable2SharedPreference(jsonClasstable)) {
+                startActivity(intent2Main);
+            }
         }
     }
 }

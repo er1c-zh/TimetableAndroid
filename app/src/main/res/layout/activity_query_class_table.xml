@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="@color/colorBackground"
+    android:orientation="vertical"
 
     tools:context="cn.ericweb.timetable.QueryClassTable">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/query_toolbar"
+        subtitleTextColor="@color/colorText"
+        titleTextColor="@color/colorText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        titleTextColor="@color/colorTitle"
-        subtitleTextColor="@color/colorTitle"
-        android:elevation="5dp"/>
+        android:elevation="5dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,25 +31,55 @@
             android:id="@+id/query_userId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/query_class_table_userId" />
+            android:hint="@string/query_class_table_userId"
+            android:textColorHint="@color/colorText"
+            android:textColor="@color/colorText"/>
 
         <EditText
             android:id="@+id/query_pwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/query_class_table_pwd"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColorHint="@color/colorText"
+            android:textColor="@color/colorText"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimary"
             android:onClick="queryClassTable"
             android:text="@string/query_class_table_button" />
-        <TextView
-            android:id="@+id/classtable_status"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:text="本地数据的状态" />
+
+            <TextView
+                android:id="@+id/classtable_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:text="查询状态"/>
+            <TextView
+                android:id="@+id/query_status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

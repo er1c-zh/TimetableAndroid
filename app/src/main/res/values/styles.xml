@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="timetable_light.Base" parent="Theme.AppCompat.Light">
+    <style name="timetable_light.Base" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -14,7 +14,12 @@
         <item name="windowNoTitle">true</item>
 
         <!--set color-->
-        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    
+    <style name="timetable_light.Popup" parent="@style/Theme.AppCompat">
+        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorText</item>
     </style>
 
 </resources>

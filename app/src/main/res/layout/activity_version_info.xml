@@ -8,17 +8,19 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/main_toolbar"
+        android:id="@+id/version_info_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="5dp"
         app:popupTheme="@style/timetable_light.Popup"/>
-
-    <ScrollView
-        android:id="@+id/main_scroll_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:padding="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/version_info_detail"/>
+    </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="cn.ericweb.timetable.MainActivity">
+
+    <item android:id="@+id/refresh_classtable"
+        android:title="refresh"
+        android:orderInCategory="80"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/version_info"
+        android:title="版本信息"
+        android:orderInCategory="90"
+        app:showAsAction="never"/>
+</menu>

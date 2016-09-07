@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Timetable</string>
-    <string name="version_info">内部测试 v0.0.1</string>
+    <string name="version_info_simple">内部测试 v0.0.1</string>
+    <string name="version_info_detail">1.实现了基本的查询显示功能</string>
 
     <!--首页-->
     <string name="query_class_table_button">Query</string>
