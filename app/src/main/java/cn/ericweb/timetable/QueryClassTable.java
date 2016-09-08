@@ -21,6 +21,8 @@ import java.net.URL;
 import java.util.Scanner;
 
 import cn.ericweb.timetable.domain.ClassTable;
+import cn.ericweb.timetable.domain.QueryResult;
+import cn.ericweb.timetable.util.AppConstant;
 
 public class QueryClassTable extends AppCompatActivity {
 
@@ -86,6 +88,10 @@ public class QueryClassTable extends AppCompatActivity {
         return true;
     }
 
+    private void showErrorInfo(String errorInfo) {
+        queryStatus.setText(errorInfo);
+    }
+
     /**
      * the Key of Intent to pass input's value
      */
@@ -96,7 +102,8 @@ public class QueryClassTable extends AppCompatActivity {
         @Override
         protected String doInBackground(String[]... strings) {
             try {
-                URL url = new URL("http://www.ericweb.cn:8080/test");
+//                URL url = new URL("http://www.ericweb.cn:8080/test");
+                URL url = new URL(getResources().getString(R.string.link_query_classtable));
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setDoOutput(true);
@@ -104,7 +111,7 @@ public class QueryClassTable extends AppCompatActivity {
 
                 conn.connect();
                 PrintWriter out = new PrintWriter(conn.getOutputStream());
-                out.print("userid=" + strings[0][0] + "&pwd=" + strings[0][1] + "&isPhone=true&year=2016&session=1&submit=query");
+                out.print(AppConstant.CLASSTABLE_ID + "=" + strings[0][0] + "&" + AppConstant.CLASSTABLE_PASSWORD + "=" + strings[0][1] + "&" + AppConstant.CLASSTABLE_YEAR + "=2016&"+ AppConstant.CLASSTABLE_SESSION + "=1");
                 out.flush();
                 out.close();
 
@@ -116,14 +123,28 @@ public class QueryClassTable extends AppCompatActivity {
                 return stringBuilder.toString();
             } catch (Exception e) {
                 e.printStackTrace();
-                return null;
+                return "";
             }
         }
 
         @Override
-        protected void onPostExecute(String jsonClasstable) {
-            if (true == setClasstable2SharedPreference(jsonClasstable)) {
-                startActivity(intent2Main);
+        protected void onPostExecute(String queryResultJson) {
+            // init gson
+            Gson gson = new Gson();
+            QueryResult result;
+            // 检查获得的数据 防止获得空内容
+            try {
+                result = gson.fromJson(queryResultJson, QueryResult.class);
+                if (result.getStatus() == QueryResult.QUERY_BAD) {
+                    showErrorInfo(result.getInfo());
+                } else {
+                    if (true == setClasstable2SharedPreference(result.getResultJson())) {
+                        startActivity(intent2Main);
+                    }
+                }
+            } catch (Exception e) {
+                showErrorInfo(getResources().getString(R.string.error_info_unknown_net_error));
+                return;
             }
         }
     }
