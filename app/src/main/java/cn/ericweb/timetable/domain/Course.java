@@ -2,7 +2,7 @@ package cn.ericweb.timetable.domain;
 
 import java.io.Serializable;
 
-public class Course implements Serializable{
+public class Course implements Serializable {
 
     public Course() {
         courseName = "";
@@ -37,8 +37,13 @@ public class Course implements Serializable{
 
     @Override
     public String toString() {
-        return courseName + "@" + address;
+        if (address.equals("")) {
+            return courseName;
+        } else {
+            return courseName + "@" + address;
+        }
     }
+
     public void setCourseName(String _courseName) {
         courseName = _courseName;
     }
@@ -62,6 +67,7 @@ public class Course implements Serializable{
     public String getAddress() {
         return address;
     }
+
     private String courseName;
     private Teacher teacher;
     private String address;

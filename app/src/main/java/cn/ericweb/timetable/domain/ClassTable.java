@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
  * @author eric
  */
 public class ClassTable implements Serializable {
@@ -34,7 +33,7 @@ public class ClassTable implements Serializable {
     /**
      * 获得CourseInClassTable
      *
-     * @param weekday 周几
+     * @param weekday    周几
      * @param classIndex 第几节课
      * @return 如果不存在，返回空对象
      */
@@ -50,9 +49,9 @@ public class ClassTable implements Serializable {
     /**
      * 添加一个CourseInClassTable
      *
-     * @param weekday 周几
+     * @param weekday    周几
      * @param classIndex 第几节课
-     * @param target 目标CourseInClassTable
+     * @param target     目标CourseInClassTable
      */
     public void addCourseInClassTable(int weekday, int classIndex, CourseInClassTable target) {
         dayInClassTable.get(weekday).addNewClass(classIndex, target);

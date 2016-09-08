@@ -13,7 +13,7 @@ public class CourseInClassTable implements Serializable {
     private String timeArrangementForCourse;
 
     public CourseInClassTable () {
-        course = null;
+        course = new Course();
         timeArrangementForCourse = "";
     }
     public boolean isCourseExistInWeek(int _week) {
