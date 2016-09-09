@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
             classTableRow.addView(classIndexContainer);
 
+            // 添加课程
             for (int day = 0; day < 7; day++) {
                 LinearLayout dayContainer = new LinearLayout(this);
                 dayContainer.setOrientation(LinearLayout.VERTICAL);
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                         classText.setText("");
                     } else {
                         classText.setText(originCourse.toString());
-                        classFrameLayout.setBackground(getDrawable(R.drawable.classtable_class_background));
+                        classFrameLayout.setBackground(getDrawable(R.drawable.classtable_class_background_radius_round_coner));
                     }
 
                     classFrameLayout.addView(classText);

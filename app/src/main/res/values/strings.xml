@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Timetable</string>
-    <string name="version_info_simple">内部测试 v0.0.1</string>
-    <string name="version_info_detail">1.实现了基本的查询显示功能</string>
+    <string name="version_info_simple">v0.0.2.20160910 alpha</string>
+    <string name="version_info_detail">更新了\n1.圆角 2.课程表边框</string>
 
     <!--首页-->
     <string name="query_class_table_button">Query</string>
     <string name="query_class_table_userId">StudentId</string>
     <string name="query_class_table_pwd">pwd</string>
     <string name="title_activity_query_class_table">Query</string>
-
-
 </resources>
