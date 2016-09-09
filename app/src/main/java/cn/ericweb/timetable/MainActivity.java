@@ -168,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    void showSettings() {
+        Intent intent = new Intent(this, cn.ericweb.timetable.SettingsActivity.class);
+        startActivity(intent);
+    }
     //    菜单click listener
     Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
         @Override
@@ -178,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.version_info:
                     showVersionInfo();
+                    break;
+                case R.id.settings:
+                    showSettings();
                     break;
                 default:
                     break;

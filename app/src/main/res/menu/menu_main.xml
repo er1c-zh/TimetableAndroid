@@ -6,8 +6,13 @@
 
     <item android:id="@+id/refresh_classtable"
         android:title="refresh"
-        android:orderInCategory="80"
+        android:orderInCategory="10"
         android:icon="@drawable/ic_refresh_white_24dp"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/settings"
+        android:title="settings"
+        android:orderInCategory="20"
+        android:icon="@drawable/ic_settings_white_24dp"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/version_info"
         android:title="版本信息"
