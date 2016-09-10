@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Timetable</string>
-    <string name="version_info_simple">v0.2.0.20160910 alpha</string>
-    <string name="version_info_detail">更新了\n1.添加了settings Activity\n2.修改了版本信息的返回按钮</string>
+    <string name="version_info_simple">v0.2.0.20160911 alpha</string>
+    <string name="version_info_detail">更新了\n1.添加了两个设置项\nTO_FIX\n1.多次输入错误密码后，因为ID被锁，所以无法正常查询\nTODO:\n1.添加自动更新周数的功能</string>
 
     <!--首页-->
     <string name="query_class_table_button">Query</string>
     <string name="query_class_table_userId">StudentId</string>
     <string name="query_class_table_pwd">pwd</string>
     <string name="title_activity_query_class_table">Query</string>
+
+    <!--settings-->
+    <string name="setting_classtable_now_week_title">当前周</string>
+    <string name="setting_classtable_if_weekends_title">是否显示周末</string>
 </resources>

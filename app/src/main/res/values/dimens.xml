@@ -4,5 +4,12 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="padding_top_or_bottom">16dp</dimen>
+    <dimen name="padding_left_or_right">16dp</dimen>
     <integer name="classtable_font_size">13</integer>
+
+    <dimen name="font_size_column_title">20sp</dimen>
+
+    <dimen name="hr_big_height">2dp</dimen>
+    <dimen name="hr_small_height">1dp</dimen>
 </resources>

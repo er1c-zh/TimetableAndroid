@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 
 import cn.ericweb.timetable.domain.ClassTable;
 import cn.ericweb.timetable.domain.CourseInClassTable;
+import cn.ericweb.timetable.util.AppConstant;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -32,8 +33,24 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setSubtitleTextColor(getResources().getColor(R.color.colorText));
         setSupportActionBar(myToolbar);
         myToolbar.setOnMenuItemClickListener(onMenuItemClick);
+
+        // 检查是否是第一次运行
+        if(isFirstRun()) {
+            SharedPreferences config = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
+            SettingsActivity.setDefaultConfig(config.edit());
+
+            // 设置不是第一次运行
+            SharedPreferences appStatus = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor appStatusEditor = appStatus.edit();
+            appStatusEditor.putBoolean(KEY_IS_FIRST_RUN, false);
+            appStatusEditor.commit();
+        }
     }
 
+    private boolean isFirstRun() {
+        SharedPreferences appStatus = getPreferences(MODE_PRIVATE);
+        return appStatus.getBoolean(KEY_IS_FIRST_RUN, true);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -44,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         //check if table already exist
         SharedPreferences sharedPref = this.getSharedPreferences("CLASS_TABLE", Context.MODE_PRIVATE);
         if (!sharedPref.contains("classtable")) {
-            Intent intent = new Intent(this, cn.ericweb.timetable.QueryClassTable.class);
+            Intent intent = new Intent(this, QueryClassTable.class);
             startActivity(intent);
         } else {
             // get课程表
@@ -55,19 +72,22 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.remove("classtable");
-                Intent intent = new Intent(this, cn.ericweb.timetable.QueryClassTable.class);
+                Intent intent = new Intent(this, QueryClassTable.class);
                 startActivity(intent);
                 return;
             }
 
-            // 获得课程表容器
+            // 获得课程表容器并清空
             LinearLayout classTableContainer = (LinearLayout) findViewById(R.id.classtable_container);
+            classTableContainer.removeAllViews();
 
+            // 获得显示几天一周
+            int dayToShow = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE).getBoolean(AppConstant.IF_WEEKENDS, true) ? 7 : 5;
             // 获得尺寸数据
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getSize(point);
             int containerWidth = point.x;
-            int perClassWidth = containerWidth / 8;
+            int perClassWidth = containerWidth / (1 + dayToShow);
 
             // 添加周几
             LinearLayout weekdayBar = new LinearLayout(this);
@@ -78,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             blank.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth, 0));
             weekdayBar.addView(blank);
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < dayToShow; i++) {
                 FrameLayout weekDayFrameLayout = new FrameLayout(this);
                 weekDayFrameLayout.setBackground(getDrawable(R.drawable.classtable_class_background));
                 weekDayFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth, 0));
@@ -114,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             classTableRow.addView(classIndexContainer);
 
             // 添加课程
-            for (int day = 0; day < 7; day++) {
+            for (int day = 0; day < dayToShow; day++) {
                 LinearLayout dayContainer = new LinearLayout(this);
                 dayContainer.setOrientation(LinearLayout.VERTICAL);
                 for (int classIndex = 0; classIndex < classTable.getCourseNumberPerDay(); classIndex++) {
@@ -133,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     classText.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
                     classText.setGravity(Gravity.CENTER);
 
-                    if (originCourse.toString().equals("")) {
+                    if (originCourse.toString().equals("") || !originCourse.isCourseExistInWeek(getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE).getInt(AppConstant.NOW_WEEK, 1))) {
                         classText.setText("");
                     } else {
                         classText.setText(originCourse.toString());
@@ -158,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    void refresh() {
+    void showRefresh() {
         Intent intent = new Intent(this, cn.ericweb.timetable.QueryClassTable.class);
         startActivity(intent);
     }
@@ -172,13 +192,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, cn.ericweb.timetable.SettingsActivity.class);
         startActivity(intent);
     }
+
+    private static final String KEY_IS_FIRST_RUN = "cn.ericweb.IS_FIRST_RUN";
     //    菜单click listener
     Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.refresh_classtable:
-                    refresh();
+                    showRefresh();
                     break;
                 case R.id.version_info:
                     showVersionInfo();

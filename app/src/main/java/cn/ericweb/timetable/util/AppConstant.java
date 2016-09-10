@@ -10,4 +10,9 @@ public class AppConstant {
     public static final String CLASSTABLE_PASSWORD = "pwd";
     public static final String CLASSTABLE_YEAR = "year";
     public static final String CLASSTABLE_SESSION = "session";
+
+    // 设置对应的key
+    public static final String CONFIG_SHARED_PREF = "cn.ericweb.CONFIG";
+    public static final String NOW_WEEK = "cn.ericweb.settings.classtable.NOW_WEEK";
+    public static final String IF_WEEKENDS = "cn.ericweb.settings.classtable.IF_WEEKENDS";
 }
