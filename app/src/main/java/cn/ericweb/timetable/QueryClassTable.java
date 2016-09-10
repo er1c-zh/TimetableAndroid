@@ -38,6 +38,13 @@ public class QueryClassTable extends AppCompatActivity {
         toolbar.setTitle("查询");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorText));
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         // 初始化指向main的intent
         intent2Main = new Intent(this, cn.ericweb.timetable.MainActivity.class);
