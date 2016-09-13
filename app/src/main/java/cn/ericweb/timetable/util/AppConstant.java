@@ -14,5 +14,6 @@ public class AppConstant {
     // 设置对应的key
     public static final String CONFIG_SHARED_PREF = "cn.ericweb.CONFIG";
     public static final String NOW_WEEK = "cn.ericweb.settings.classtable.NOW_WEEK";
+    public static final String FIRST_WEEK_START_MONDAY_DATE = "cn.ericweb.settings.classtable.NOW_WEEK_START_MONDAY_DATE";
     public static final String IF_WEEKENDS = "cn.ericweb.settings.classtable.IF_WEEKENDS";
 }

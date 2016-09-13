@@ -1,5 +1,6 @@
 package cn.ericweb.timetable;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +12,11 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import cn.ericweb.timetable.util.AppConstant;
 
@@ -44,11 +50,11 @@ public class SettingsActivity extends AppCompatActivity {
         // classtable
         // 当前周
         TextView resultNowWeek = (TextView) findViewById(R.id.result_now_week);
-        resultNowWeek.setText(this.sharedPref.getInt(AppConstant.NOW_WEEK, 1) + "");
+        resultNowWeek.setText(this.sharedPref.getInt(AppConstant.NOW_WEEK, 0) + "");
 
         // 是否显示周末
         Switch resultIfWeekends = (Switch) findViewById(R.id.result_if_weekends);
-        if (this.sharedPref.getBoolean(AppConstant.IF_WEEKENDS, true) == true) {
+        if (this.sharedPref.getBoolean(AppConstant.IF_WEEKENDS, true)) {
             resultIfWeekends.setChecked(true);
         }
     }
@@ -58,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.setting_classtable_now_week_title));
         // 获得内部构件
-        View content = LayoutInflater.from(this).inflate(R.layout.dialog_number_picker, null);
+        @SuppressLint("InflateParams") View content = LayoutInflater.from(this).inflate(R.layout.dialog_number_picker, null);
         final NumberPicker numberPicker = (NumberPicker) content.findViewById(R.id.number_picker);
         numberPicker.setMaxValue(52);
         numberPicker.setMinValue(1);
@@ -70,6 +76,17 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 int result = numberPicker.getValue();
                 editor.putInt(AppConstant.NOW_WEEK, result);
+
+                // 设置开始的周一的日期
+                Calendar calendar = Calendar.getInstance();
+                // -((离周一有几天) + (离第一周有几天))
+                // -2 是因为在中国是以周日返回1 周一返回2...(我怎么就是按每周第一天是周一过的呢)
+                int day2Monday = (calendar.get(Calendar.DAY_OF_WEEK) - 2) < 0 ? calendar.get(Calendar.DAY_OF_WEEK) - 2 + 7 : calendar.get(Calendar.DAY_OF_WEEK) - 2;
+                int day2FirstWeek = (result - 1) * 7;
+                calendar.add(Calendar.DATE, -(day2Monday + day2FirstWeek));
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
+                editor.putString(AppConstant.FIRST_WEEK_START_MONDAY_DATE, yyyymmdd.format(calendar.getTime()));
+
                 editor.commit();
                 refreshViewStatus();
             }
@@ -91,6 +108,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         refreshViewStatus();
     }
+
     /**
      * 设置默认设置
      *
@@ -101,10 +119,38 @@ public class SettingsActivity extends AppCompatActivity {
         editor.clear();
 
         // set default config
+
+        // 设置当前周数
         editor.putInt(AppConstant.NOW_WEEK, 1);
+
+        // 设置开始的周一的日期
+        Calendar calendar = Calendar.getInstance();
+        // -((离周一有几天) + (离第一周有几天))
+        // -2 是因为在中国是以周日返回1 周一返回2...(我怎么就是按每周第一天是周一过的呢)
+        int day2Monday = (calendar.get(Calendar.DAY_OF_WEEK) - 2) < 0 ? calendar.get(Calendar.DAY_OF_WEEK) - 2 + 7 : calendar.get(Calendar.DAY_OF_WEEK) - 2;
+        calendar.add(Calendar.DATE, -day2Monday);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
+        editor.putString(AppConstant.FIRST_WEEK_START_MONDAY_DATE, yyyymmdd.format(calendar.getTime()));
+
         editor.putBoolean(AppConstant.IF_WEEKENDS, true);
 
         // commit
+        editor.commit();
+    }
+
+    public static void refreshConfigOnEveryStart(SharedPreferences sharedPref) {
+        // 计算周数
+        Date now = new Date();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
+        Date startDate;
+        try {
+            startDate = yyyymmdd.parse(sharedPref.getString(AppConstant.FIRST_WEEK_START_MONDAY_DATE, yyyymmdd.format(now)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            startDate = now;
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(AppConstant.NOW_WEEK, ((int) ((now.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))) / 7 + 1);
         editor.commit();
     }
 

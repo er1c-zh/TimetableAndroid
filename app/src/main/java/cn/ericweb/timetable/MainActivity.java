@@ -1,5 +1,6 @@
 package cn.ericweb.timetable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,11 +18,15 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.util.Calendar;
+
 import cn.ericweb.timetable.domain.ClassTable;
 import cn.ericweb.timetable.domain.CourseInClassTable;
 import cn.ericweb.timetable.util.AppConstant;
+import cn.ericweb.timetable.util.EricDate;
 
 public class MainActivity extends AppCompatActivity {
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setOnMenuItemClickListener(onMenuItemClick);
 
         // 检查是否是第一次运行
-        if(isFirstRun()) {
+        if (isFirstRun()) {
             SharedPreferences config = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
             SettingsActivity.setDefaultConfig(config.edit());
 
@@ -47,16 +52,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 检测是否是第一次运行
+     *
+     * @return 是第一次返回true
+     */
     private boolean isFirstRun() {
         SharedPreferences appStatus = getPreferences(MODE_PRIVATE);
         return appStatus.getBoolean(KEY_IS_FIRST_RUN, true);
     }
+
+    /**
+     * 重绘课程表的表格
+     */
     @Override
     protected void onResume() {
         super.onResume();
+
+        // 刷新数据
+        SharedPreferences config = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
+        SettingsActivity.refreshConfigOnEveryStart(config);
+
         showTables();
     }
 
+    /**
+     * 绘制课程表
+     */
+    @SuppressLint("SetTextI18n")
     void showTables() {
         //check if table already exist
         SharedPreferences sharedPref = this.getSharedPreferences("CLASS_TABLE", Context.MODE_PRIVATE);
@@ -92,10 +115,17 @@ public class MainActivity extends AppCompatActivity {
             // 添加周几
             LinearLayout weekdayBar = new LinearLayout(this);
             weekdayBar.setOrientation(LinearLayout.HORIZONTAL);
-            // 添加周几前的空格
+            // 添加周几前的周数
             FrameLayout blank = new FrameLayout(this);
             blank.setBackground(getDrawable(R.drawable.classtable_class_background));
             blank.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth, 0));
+            TextView indexOfWeek = new TextView(this);
+            indexOfWeek.setGravity(Gravity.CENTER);
+            SharedPreferences configSharedPref = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
+            Calendar tempCalendar = Calendar.getInstance();
+            int month = tempCalendar.get(Calendar.MONTH) + 1;
+            indexOfWeek.setText("W" + configSharedPref.getInt(AppConstant.NOW_WEEK, 0) + "\nM" + month );
+            blank.addView(indexOfWeek);
             weekdayBar.addView(blank);
 
             for (int i = 0; i < dayToShow; i++) {
@@ -105,13 +135,17 @@ public class MainActivity extends AppCompatActivity {
                 TextView weekDayTextView = new TextView(this);
                 weekDayTextView.setGravity(Gravity.CENTER);
                 int temp = i + 1;
-                weekDayTextView.setText(temp + "");
+//                EricDate tempEricDate = new EricDate();
+                Calendar tempDateCalendar = Calendar.getInstance();
+                int todayOfWeek = tempDateCalendar.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : tempDateCalendar.get(Calendar.DAY_OF_WEEK) - 1;
+                tempDateCalendar.add(Calendar.DATE, temp - todayOfWeek);
+                weekDayTextView.setText(temp + "" + "\nD" + tempDateCalendar.get(Calendar.DAY_OF_MONTH));
                 weekDayFrameLayout.addView(weekDayTextView);
                 weekdayBar.addView(weekDayFrameLayout);
             }
             classTableContainer.addView(weekdayBar);
 
-            //添加课程表
+            // 添加课程表
             // 添加一个scroll
             ScrollView scrollView = new ScrollView(this);
 
@@ -171,23 +205,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //    创建菜单
+    /**
+     * 创建菜单
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * 显示重新获取的Activity
+     */
     void showRefresh() {
         Intent intent = new Intent(this, cn.ericweb.timetable.QueryClassTable.class);
         startActivity(intent);
     }
 
+    /**
+     * 显示版本信息
+     */
     void showVersionInfo() {
         Intent intent = new Intent(this, cn.ericweb.timetable.VersionInfo.class);
         startActivity(intent);
     }
 
+    /**
+     * 展示设置页面
+     */
     void showSettings() {
         Intent intent = new Intent(this, cn.ericweb.timetable.SettingsActivity.class);
         startActivity(intent);
