@@ -135,11 +135,13 @@ public class MainActivity extends AppCompatActivity {
                 TextView weekDayTextView = new TextView(this);
                 weekDayTextView.setGravity(Gravity.CENTER);
                 int temp = i + 1;
-//                EricDate tempEricDate = new EricDate();
                 Calendar tempDateCalendar = Calendar.getInstance();
                 int todayOfWeek = tempDateCalendar.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : tempDateCalendar.get(Calendar.DAY_OF_WEEK) - 1;
                 tempDateCalendar.add(Calendar.DATE, temp - todayOfWeek);
                 weekDayTextView.setText(temp + "" + "\nD" + tempDateCalendar.get(Calendar.DAY_OF_MONTH));
+                if (todayOfWeek == temp) {
+                    weekDayTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                }
                 weekDayFrameLayout.addView(weekDayTextView);
                 weekdayBar.addView(weekDayFrameLayout);
             }

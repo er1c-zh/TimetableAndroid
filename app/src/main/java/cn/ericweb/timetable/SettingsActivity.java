@@ -68,6 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
         final NumberPicker numberPicker = (NumberPicker) content.findViewById(R.id.number_picker);
         numberPicker.setMaxValue(52);
         numberPicker.setMinValue(1);
+        numberPicker.setValue(this.sharedPref.getInt(AppConstant.NOW_WEEK, 1));
 
 
         // 监听器
