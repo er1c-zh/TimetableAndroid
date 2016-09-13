@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Timetable</string>
     <string name="version_info_simple">v0.2.1.20160914 alpha</string>
-    <string name="version_info_detail">更新了\n1.添加了自动计算周数的功能\n2.添加了显示当前天数的功能\n3.显示日期\n4.提升了用户体验的一些修改</string>
+    <string name="version_info_detail">更新了\n1.添加了自动计算周数的功能\n2.添加了显示当前天数的功能\n3.显示日期\n4.提升了用户体验的一些修改\n\nTODO:\n1.显示课程信息</string>
 
     <!--首页-->
     <string name="query_class_table_button">Query</string>

@@ -5,12 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -18,6 +23,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import cn.ericweb.timetable.domain.ClassTable;
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences configSharedPref = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
             Calendar tempCalendar = Calendar.getInstance();
             int month = tempCalendar.get(Calendar.MONTH) + 1;
-            indexOfWeek.setText("W" + configSharedPref.getInt(AppConstant.NOW_WEEK, 0) + "\nM" + month );
+            indexOfWeek.setText("W" + configSharedPref.getInt(AppConstant.NOW_WEEK, 0) + "\nM" + month);
             blank.addView(indexOfWeek);
             weekdayBar.addView(blank);
 
@@ -157,13 +165,29 @@ public class MainActivity extends AppCompatActivity {
             // 添加课程index
             LinearLayout classIndexContainer = new LinearLayout(this);
             classIndexContainer.setOrientation(LinearLayout.VERTICAL);
+
+            // 时间的计时器
+            int hour = classTable.getStartHour();
+            int minute = classTable.getStartMinute();
+            ArrayList<Integer> classIntervalArrayList = classTable.getIntervalPerCourse();
             for (int classIndex = 1; classIndex <= classTable.getCourseNumberPerDay(); classIndex++) {
                 FrameLayout frameLayout = new FrameLayout(this);
                 frameLayout.setBackground(getDrawable(R.drawable.classtable_class_background));
                 frameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth, 0));
                 TextView classIndexText = new TextView(this);
                 classIndexText.setGravity(Gravity.CENTER);
-                classIndexText.setText(classIndex + "");
+                classIndexText.setText(hour + ":" + minute + "\n" + classIndex);
+
+                // 更新时间
+                // TODO: 16-9-14 修改ClassTable 添加一个没节课的时间，修改掉下面的45（UESTC）
+                try {
+                    minute += classIntervalArrayList.get(classIndex - 1) + 45;
+                    int minuteRemainder = minute % 60;
+                    hour += minute / 60;
+                    minute = minuteRemainder;
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
                 frameLayout.addView(classIndexText);
                 classIndexContainer.addView(frameLayout);
             }
@@ -194,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         classText.setText(originCourse.toString());
                         classFrameLayout.setBackground(getDrawable(R.drawable.classtable_class_background_radius_round_coner));
+                        classText.setOnClickListener(this.classInfoListener);
                     }
 
                     classFrameLayout.addView(classText);
@@ -206,6 +231,28 @@ public class MainActivity extends AppCompatActivity {
             classTableContainer.addView(scrollView);
         }
     }
+
+    View.OnClickListener classInfoListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            TextView textView = (TextView) view;
+            // TODO: 16-9-14 分析后获得课程CourseInClass（好象是） 更新服务器端
+
+            AlertDialog.Builder classInfoDialogBuilder = new AlertDialog.Builder(textView.getContext());
+
+            // 加载布局文件
+            View content = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_class_info, null);
+            TextView classTitle = (TextView) content.findViewById(R.id.className);
+            classTitle.setText(textView.getText());
+
+            classInfoDialogBuilder.setView(content, 0, 0, 0, 0);
+
+            AlertDialog classInfoDialog = classInfoDialogBuilder.create();
+            classInfoDialog.setCanceledOnTouchOutside(true);
+
+            classInfoDialog.show();
+        }
+    };
 
     /**
      * 创建菜单
