@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 import cn.ericweb.timetable.domain.ClassTable;
+import cn.ericweb.timetable.domain.ClassTableAppAdditionalInfo;
 import cn.ericweb.timetable.domain.QueryResult;
 import cn.ericweb.timetable.util.AppConstant;
 
@@ -80,17 +81,33 @@ public class QueryClassTable extends AppCompatActivity {
         }
     }
 
-    private boolean setClasstable2SharedPreference(String jsonClasstable) {
+    /**
+     * 设置课程表类和附加信息类到SharedPreference
+     *
+     * @param jsonClasstable
+     * @return
+     */
+    private boolean setClasstableAndAdditionalInfo2SharedPreference(String jsonClasstable) {
         Gson gson = new Gson();
+        ClassTableAppAdditionalInfo additionalInfo = new ClassTableAppAdditionalInfo();
         try {
             ClassTable temp = gson.fromJson(jsonClasstable, ClassTable.class);
+
+            // 构建额外信息
+            int classPerDay = temp.getCourseNumberPerDay();
+            for (int day = 0; day < 7; day++) {
+                for (int classIndex = 0; classIndex < classPerDay; classIndex++) {
+                    additionalInfo.addCourseAppAdditionalInfo(temp.getCourseInClassTable(day, classIndex).getCourse());
+                }
+            }
         } catch (Exception e) {
             queryStatus.setText("数据出现了错误===" + jsonClasstable);
             return false;
         }
-        SharedPreferences sharedPref = this.getSharedPreferences("CLASS_TABLE", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("classtable", jsonClasstable);
+        editor.putString(AppConstant.CLASSTABLE_KEY_MAIN, jsonClasstable);
+        editor.putString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, gson.toJson(additionalInfo));
         editor.commit();
         return true;
     }
@@ -109,6 +126,7 @@ public class QueryClassTable extends AppCompatActivity {
         @Override
         protected String doInBackground(String[]... strings) {
             try {
+                // 这是老版服务器的网址 应该是没用了
 //                URL url = new URL("http://www.ericweb.cn:8080/test");
                 URL url = new URL(getResources().getString(R.string.link_query_classtable));
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -118,7 +136,7 @@ public class QueryClassTable extends AppCompatActivity {
 
                 conn.connect();
                 PrintWriter out = new PrintWriter(conn.getOutputStream());
-                out.print(AppConstant.CLASSTABLE_ID + "=" + strings[0][0] + "&" + AppConstant.CLASSTABLE_PASSWORD + "=" + strings[0][1] + "&" + AppConstant.CLASSTABLE_YEAR + "=2016&"+ AppConstant.CLASSTABLE_SESSION + "=1");
+                out.print(AppConstant.CLASSTABLE_ID + "=" + strings[0][0] + "&" + AppConstant.CLASSTABLE_PASSWORD + "=" + strings[0][1] + "&" + AppConstant.CLASSTABLE_YEAR + "=2016&" + AppConstant.CLASSTABLE_SESSION + "=1");
                 out.flush();
                 out.close();
 
@@ -145,8 +163,9 @@ public class QueryClassTable extends AppCompatActivity {
                 if (result.getStatus() == QueryResult.QUERY_BAD) {
                     showErrorInfo(result.getInfo());
                 } else {
-                    if (true == setClasstable2SharedPreference(result.getResultJson())) {
-                        startActivity(intent2Main);
+                    if (true == setClasstableAndAdditionalInfo2SharedPreference(result.getResultJson())) {
+//                        startActivity(intent2Main);
+                        finish();
                     }
                 }
             } catch (Exception e) {

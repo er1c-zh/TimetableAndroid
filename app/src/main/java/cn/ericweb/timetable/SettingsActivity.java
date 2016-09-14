@@ -41,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         // 初始化sharedPref和editor
-        this.sharedPref = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
+        this.sharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
         this.editor = sharedPref.edit();
         refreshViewStatus();
     }

@@ -9,4 +9,7 @@
     <color name="black_overlay">#66000000</color>
 
     <color name="apparent_background">#000000</color>
+
+    <!--课程块的背景颜色-->
+    <color name="background_class_default">#000000</color>
 </resources>

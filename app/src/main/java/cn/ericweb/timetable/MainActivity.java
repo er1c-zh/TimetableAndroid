@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,8 +18,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -23,15 +25,14 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import cn.ericweb.timetable.domain.ClassTable;
+import cn.ericweb.timetable.domain.ClassTableAppAdditionalInfo;
+import cn.ericweb.timetable.domain.CourseAppAdditionalInfo;
 import cn.ericweb.timetable.domain.CourseInClassTable;
 import cn.ericweb.timetable.util.AppConstant;
-import cn.ericweb.timetable.util.EricDate;
 
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("CommitPrefEdits")
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 检查是否是第一次运行
         if (isFirstRun()) {
-            SharedPreferences config = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
+            SharedPreferences config = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
             SettingsActivity.setDefaultConfig(config.edit());
 
             // 设置不是第一次运行
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         // 刷新数据
-        SharedPreferences config = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
+        SharedPreferences config = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
         SettingsActivity.refreshConfigOnEveryStart(config);
 
         showTables();
@@ -90,19 +91,21 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     void showTables() {
         //check if table already exist
-        SharedPreferences sharedPref = this.getSharedPreferences("CLASS_TABLE", Context.MODE_PRIVATE);
-        if (!sharedPref.contains("classtable")) {
+        SharedPreferences sharedPref = this.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, Context.MODE_PRIVATE);
+        if (!sharedPref.contains(AppConstant.CLASSTABLE_KEY_MAIN)) {
             Intent intent = new Intent(this, QueryClassTable.class);
             startActivity(intent);
         } else {
-            // get课程表
+            // get课程表和附加信息
             Gson gson = new Gson();
             ClassTable classTable;
+            ClassTableAppAdditionalInfo classTableAppAdditionalInfo;
             try {
-                classTable = gson.fromJson(sharedPref.getString("classtable", ""), ClassTable.class);
+                classTable = gson.fromJson(sharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, ""), ClassTable.class);
+                classTableAppAdditionalInfo = gson.fromJson(sharedPref.getString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, ""), ClassTableAppAdditionalInfo.class);
             } catch (Exception e) {
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.remove("classtable");
+                editor.remove(AppConstant.CLASSTABLE_KEY_MAIN);
                 Intent intent = new Intent(this, QueryClassTable.class);
                 startActivity(intent);
                 return;
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             classTableContainer.removeAllViews();
 
             // 获得显示几天一周
-            int dayToShow = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE).getBoolean(AppConstant.IF_WEEKENDS, true) ? 7 : 5;
+            int dayToShow = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE).getBoolean(AppConstant.IF_WEEKENDS, true) ? 7 : 5;
             // 获得尺寸数据
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getSize(point);
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             blank.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth, 0));
             TextView indexOfWeek = new TextView(this);
             indexOfWeek.setGravity(Gravity.CENTER);
-            SharedPreferences configSharedPref = getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE);
+            SharedPreferences configSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
             Calendar tempCalendar = Calendar.getInstance();
             int month = tempCalendar.get(Calendar.MONTH) + 1;
             indexOfWeek.setText("W" + configSharedPref.getInt(AppConstant.NOW_WEEK, 0) + "\nM" + month);
@@ -195,12 +198,18 @@ public class MainActivity extends AppCompatActivity {
 
             // 添加课程
             for (int day = 0; day < dayToShow; day++) {
+                // 循环每天
                 LinearLayout dayContainer = new LinearLayout(this);
                 dayContainer.setOrientation(LinearLayout.VERTICAL);
                 for (int classIndex = 0; classIndex < classTable.getCourseNumberPerDay(); classIndex++) {
+                    // 循环每个周
+                    // 构建盛放每个class的布局
                     FrameLayout classFrameLayout = new FrameLayout(this);
+                    // 获得最初的CourseInClassTable
                     CourseInClassTable originCourse = classTable.getCourseInClassTable(day, classIndex);
-
+                    // 获得附加信息
+                    CourseAppAdditionalInfo originCourseAdditionalInfo = classTableAppAdditionalInfo.getCourseAppAditionalInfo(originCourse.toString());
+                    // 合并同一节课
                     for (int isCourseEqualIndex = classIndex + 1; true; isCourseEqualIndex++) {
                         if (!classTable.getCourseInClassTable(day, isCourseEqualIndex).equals(originCourse) || isCourseEqualIndex >= classTable.getCourseNumberPerDay()) {
                             classFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth * (isCourseEqualIndex - classIndex), 0));
@@ -208,16 +217,22 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         }
                     }
-
+                    // 创建展示的TextView
                     TextView classText = new TextView(this);
                     classText.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
                     classText.setGravity(Gravity.CENTER);
 
-                    if (originCourse.toString().equals("") || !originCourse.isCourseExistInWeek(getSharedPreferences(AppConstant.CONFIG_SHARED_PREF, MODE_PRIVATE).getInt(AppConstant.NOW_WEEK, 1))) {
+                    if (originCourse.toString().equals("") || !originCourse.isCourseExistInWeek(getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE).getInt(AppConstant.NOW_WEEK, 1))) {
                         classText.setText("");
                     } else {
-                        classText.setText(originCourse.toString());
-                        classFrameLayout.setBackground(getDrawable(R.drawable.classtable_class_background_radius_round_coner));
+                        classText.setText(originCourseAdditionalInfo.getString2Show());
+                        GradientDrawable classBackgroundDrawable = (GradientDrawable) getDrawable(R.drawable.classtable_class_background_radius_round_coner);
+                        if (classBackgroundDrawable != null) {
+                            classBackgroundDrawable.setColor(getResources().getColor(originCourseAdditionalInfo.getColorId()));
+                        }
+
+                        classFrameLayout.setBackground(classBackgroundDrawable);
+
                         classText.setOnClickListener(this.classInfoListener);
                     }
 
