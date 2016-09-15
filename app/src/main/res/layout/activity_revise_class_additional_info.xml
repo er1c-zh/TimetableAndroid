@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -12,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="5dp"
-        app:popupTheme="@style/timetable_light.Popup" />
+        android:elevation="5dp"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,20 +20,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/padding_left_or_right">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="@dimen/padding_left_or_right"
-                android:text="@string/dialog_class_info_course_name_short_hint" />
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_left_or_right">
 
-            <EditText
-                android:id="@+id/new_short_course_name"
-                android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/padding_left_or_right"
+                    android:text="@string/revise_class_additional_info_course_name_short_label" />
+
+                <EditText
+                    android:id="@+id/new_short_course_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:padding="@dimen/padding_left_or_right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/padding_left_or_right"
+                    android:text="@string/revise_class_additional_info_class_background_color_id" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

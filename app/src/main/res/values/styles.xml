@@ -8,18 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="timetable_light.NoActionBar" parent="@style/timetable_light.Base">
+    <style name="timetable_light.NoActionBar" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
-        <!--set color-->
-        <item name="android:textColor">@color/colorText</item>
     </style>
-    
-    <style name="timetable_light.Popup" parent="@style/Theme.AppCompat">
-        <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="android:textColor">@color/colorText</item>
-    </style>
-
 </resources>

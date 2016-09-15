@@ -37,7 +37,6 @@ public class QueryClassTable extends AppCompatActivity {
 //        布置toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.query_toolbar);
         toolbar.setTitle("查询");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorText));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

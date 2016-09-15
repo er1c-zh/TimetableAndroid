@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#ffe600</color>
-
-    <color name="colorText">#ffffff</color>
-    <color name="colorBackground">#323232</color>
-    <color name="black_overlay">#66000000</color>
-
-    <color name="apparent_background">#000000</color>
-
-    <!--课程块的背景颜色-->
-    <color name="background_class_default">#000000</color>
+    <color name="colorPrimary">#0000ff</color>
+    <color name="colorPrimaryDark">#0000ff</color>
+    <color name="colorAccent">#ff00ff</color>
 </resources>

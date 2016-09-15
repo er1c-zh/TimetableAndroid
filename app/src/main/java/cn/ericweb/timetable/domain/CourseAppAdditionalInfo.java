@@ -1,5 +1,7 @@
 package cn.ericweb.timetable.domain;
 
+import android.graphics.Color;
+
 import cn.ericweb.timetable.R;
 
 /**
@@ -10,7 +12,7 @@ public class CourseAppAdditionalInfo {
     public CourseAppAdditionalInfo(Course _course) {
         course = _course;
         shortOfCourseName = this.getShortOfCourseName(course.getCourseName());
-        colorId = R.color.background_class_default;
+        colorId = Color.BLUE;
     }
 
     /**

@@ -23,4 +23,6 @@
 
     <!--修改附加信息界面-->
     <string name="revise_class_additional_info_confirm">确认修改</string>
+    <string name="revise_class_additional_info_course_name_short_label">课程简称</string>
+    <string name="revise_class_additional_info_class_background_color_id">背景颜色</string>
 </resources>

@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                 frameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassHeight, 0));
                 TextView classIndexText = new TextView(this);
                 classIndexText.setGravity(Gravity.CENTER);
-                classIndexText.setText(hour + ":" + minute + "\n" + classIndex);
+                classIndexText.setText(hour + ":" + minute + (minute == 0 ? "0" : "") + "\n" + classIndex);
 
                 // 更新时间
                 // TODO: 16-9-14 修改ClassTable 添加一个没节课的时间，修改掉下面的45（UESTC）
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
                         GradientDrawable classBackgroundDrawable = (GradientDrawable) getDrawable(R.drawable.classtable_class_background_radius_round_coner);
                         if (classBackgroundDrawable != null) {
-                            classBackgroundDrawable.setColor(getResources().getColor(originCourseAdditionalInfo.getColorId()));
+                            classBackgroundDrawable.setColor(originCourseAdditionalInfo.getColorId());
                         }
 
                         classFrameLayout.setBackground(classBackgroundDrawable);
