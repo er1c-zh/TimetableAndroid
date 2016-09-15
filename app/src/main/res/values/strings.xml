@@ -13,4 +13,11 @@
     <!--settings-->
     <string name="setting_classtable_now_week_title">当前周</string>
     <string name="setting_classtable_if_weekends_title">是否显示周末</string>
+
+    <!--课程信息dialog-->
+    <string name="dialog_class_info_course_name_hint">课程标题</string>
+    <string name="dialog_class_info_course_name_short_hint">课程简称</string>
+    <string name="dialog_class_info_address_hint">课程地址</string>
+    <string name="dialog_class_info_teacher_name_hint">教师姓名</string>
+    <string name="dialog_class_info_revise_button">修改</string>
 </resources>

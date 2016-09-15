@@ -30,7 +30,12 @@ public class CourseAppAdditionalInfo {
      * @return
      */
     public boolean isInfoAboutThisCourse(String _string) {
-        return null != _string && _string.equals(course.toString());
+        if (null != _string) {
+            if(_string.equals(course.toString()) || _string.equals(getString2Show())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -97,7 +97,9 @@ public class QueryClassTable extends AppCompatActivity {
             int classPerDay = temp.getCourseNumberPerDay();
             for (int day = 0; day < 7; day++) {
                 for (int classIndex = 0; classIndex < classPerDay; classIndex++) {
-                    additionalInfo.addCourseAppAdditionalInfo(temp.getCourseInClassTable(day, classIndex).getCourse());
+                    if (null != temp.getCourseInClassTable(day, classIndex)) {
+                        additionalInfo.addCourseAppAdditionalInfo(temp.getCourseInClassTable(day, classIndex).getCourse());
+                    }
                 }
             }
         } catch (Exception e) {

@@ -2,13 +2,11 @@ package cn.ericweb.timetable;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.Shape;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -208,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                     // 获得最初的CourseInClassTable
                     CourseInClassTable originCourse = classTable.getCourseInClassTable(day, classIndex);
                     // 获得附加信息
-                    CourseAppAdditionalInfo originCourseAdditionalInfo = classTableAppAdditionalInfo.getCourseAppAditionalInfo(originCourse.toString());
+                    CourseAppAdditionalInfo originCourseAdditionalInfo = classTableAppAdditionalInfo.getCourseAppAdditionalInfo(originCourse.getCourse());
                     // 合并同一节课
                     for (int isCourseEqualIndex = classIndex + 1; true; isCourseEqualIndex++) {
                         if (!classTable.getCourseInClassTable(day, isCourseEqualIndex).equals(originCourse) || isCourseEqualIndex >= classTable.getCourseNumberPerDay()) {
@@ -222,10 +221,12 @@ public class MainActivity extends AppCompatActivity {
                     classText.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
                     classText.setGravity(Gravity.CENTER);
 
-                    if (originCourse.toString().equals("") || !originCourse.isCourseExistInWeek(getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE).getInt(AppConstant.NOW_WEEK, 1))) {
+                    // 附加的信息不为null 课程不为空 本周有课
+                    if (originCourseAdditionalInfo == null || originCourse.toString().equals("") || !originCourse.isCourseExistInWeek(getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE).getInt(AppConstant.NOW_WEEK, 1))) {
                         classText.setText("");
                     } else {
                         classText.setText(originCourseAdditionalInfo.getString2Show());
+
                         GradientDrawable classBackgroundDrawable = (GradientDrawable) getDrawable(R.drawable.classtable_class_background_radius_round_coner);
                         if (classBackgroundDrawable != null) {
                             classBackgroundDrawable.setColor(getResources().getColor(originCourseAdditionalInfo.getColorId()));
@@ -250,24 +251,65 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener classInfoListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            TextView textView = (TextView) view;
-            // TODO: 16-9-14 分析后获得课程CourseInClass（好象是） 更新服务器端
+            final TextView textView = (TextView) view;
 
             AlertDialog.Builder classInfoDialogBuilder = new AlertDialog.Builder(textView.getContext());
 
+            // 获得附加信息类
+            final Gson gson = new Gson();
+            SharedPreferences tempSharedPref = view.getContext().getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, MODE_PRIVATE);
+            String additionalInfoJson = tempSharedPref.getString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, "");
+            ClassTableAppAdditionalInfo additionalInfo;
+            final CourseAppAdditionalInfo courseAppAdditionalInfo;
+            try {
+                additionalInfo = gson.fromJson(additionalInfoJson, ClassTableAppAdditionalInfo.class);
+                courseAppAdditionalInfo = additionalInfo.getCourseAppAdditionalInfo((String) textView.getText());
+            } catch (Exception e) {
+                return;
+            }
+
+            // listener
+            DialogInterface.OnClickListener reviseAdditionalInfoListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(textView.getContext(), ReviseClassAdditionalInfo.class);
+                    intent.putExtra(ReviseClassAdditionalInfo.TARGET_COURSE_ADDITIONAL_INFO, gson.toJson(courseAppAdditionalInfo));
+                    startActivity(intent);
+                }
+            };
+
             // 加载布局文件
             View content = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_class_info, null);
+
+            // title
             TextView classTitle = (TextView) content.findViewById(R.id.className);
-            classTitle.setText(textView.getText());
+            classTitle.setText(courseAppAdditionalInfo.getCourse().getCourseName());
 
-            classInfoDialogBuilder.setView(content, 0, 0, 0, 0);
+            // short course name
+            TextView shortCourseName = (TextView) content.findViewById(R.id.shortClassName);
+            shortCourseName.setText(courseAppAdditionalInfo.getShortOfCourseName());
 
+            // address
+            TextView address = (TextView) content.findViewById(R.id.classAddress);
+            address.setText(courseAppAdditionalInfo.getCourse().getAddress());
+
+            // teacher name
+            TextView teacherName = (TextView) content.findViewById(R.id.classTeacher);
+            teacherName.setText(courseAppAdditionalInfo.getCourse().getTeacher().getName());
+
+
+            classInfoDialogBuilder.setView(content);
+            // 开启修改按钮
+            classInfoDialogBuilder.setPositiveButton(getString(R.string.dialog_class_info_revise_button), reviseAdditionalInfoListener);
             AlertDialog classInfoDialog = classInfoDialogBuilder.create();
             classInfoDialog.setCanceledOnTouchOutside(true);
 
             classInfoDialog.show();
         }
+
+
     };
+
 
     /**
      * 创建菜单
