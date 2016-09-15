@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -80,7 +81,11 @@ public class MainActivity extends AppCompatActivity {
         // 刷新数据
         SharedPreferences config = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
         SettingsActivity.refreshConfigOnEveryStart(config);
+    }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
         showTables();
     }
 
@@ -117,10 +122,17 @@ public class MainActivity extends AppCompatActivity {
             // 获得显示几天一周
             int dayToShow = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE).getBoolean(AppConstant.IF_WEEKENDS, true) ? 7 : 5;
             // 获得尺寸数据
+            // 宽度
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getSize(point);
             int containerWidth = point.x;
             int perClassWidth = containerWidth / (1 + dayToShow);
+            // 高度
+            Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+            Rect viewCanvasRect = new Rect();
+            getWindow().findViewById(Window.ID_ANDROID_CONTENT).getDrawingRect(viewCanvasRect);
+            int containerHeight = viewCanvasRect.height() - toolbar.getHeight();
+            int perClassHeight = containerHeight / (classTable.getCourseNumberPerDay() + 1);
 
             // 添加周几
             LinearLayout weekdayBar = new LinearLayout(this);
@@ -128,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             // 添加周几前的周数
             FrameLayout blank = new FrameLayout(this);
             blank.setBackground(getDrawable(R.drawable.classtable_class_background));
-            blank.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth, 0));
+            blank.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassHeight, 0));
             TextView indexOfWeek = new TextView(this);
             indexOfWeek.setGravity(Gravity.CENTER);
             SharedPreferences configSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
@@ -141,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < dayToShow; i++) {
                 FrameLayout weekDayFrameLayout = new FrameLayout(this);
                 weekDayFrameLayout.setBackground(getDrawable(R.drawable.classtable_class_background));
-                weekDayFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth, 0));
+                weekDayFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassHeight, 0));
                 TextView weekDayTextView = new TextView(this);
                 weekDayTextView.setGravity(Gravity.CENTER);
                 int temp = i + 1;
@@ -175,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             for (int classIndex = 1; classIndex <= classTable.getCourseNumberPerDay(); classIndex++) {
                 FrameLayout frameLayout = new FrameLayout(this);
                 frameLayout.setBackground(getDrawable(R.drawable.classtable_class_background));
-                frameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth, 0));
+                frameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassHeight, 0));
                 TextView classIndexText = new TextView(this);
                 classIndexText.setGravity(Gravity.CENTER);
                 classIndexText.setText(hour + ":" + minute + "\n" + classIndex);
@@ -211,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                     // 合并同一节课
                     for (int isCourseEqualIndex = classIndex + 1; true; isCourseEqualIndex++) {
                         if (!classTable.getCourseInClassTable(day, isCourseEqualIndex).equals(originCourse) || isCourseEqualIndex >= classTable.getCourseNumberPerDay()) {
-                            classFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassWidth * (isCourseEqualIndex - classIndex), 0));
+                            classFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassHeight * (isCourseEqualIndex - classIndex), 0));
                             classIndex = isCourseEqualIndex - 1;
                             break;
                         }

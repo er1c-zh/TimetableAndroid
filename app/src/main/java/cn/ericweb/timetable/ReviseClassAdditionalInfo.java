@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.gson.Gson;
 
@@ -41,6 +42,15 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
                 finish();
             }
         });
+
+        initDefaultValue();
     }
+
+    private void initDefaultValue() {
+        // 缩写
+        EditText shortName = (EditText) findViewById(R.id.new_short_course_name);
+        shortName.setText(additionalInfo.getShortOfCourseName());
+    }
+
     private CourseAppAdditionalInfo additionalInfo;
 }

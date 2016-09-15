@@ -9,4 +9,5 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
+    <dimen name="actionBarSize">10dp</dimen>
 </resources>
