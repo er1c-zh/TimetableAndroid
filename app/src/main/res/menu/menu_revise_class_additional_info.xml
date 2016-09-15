@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:apps="http://schemas.android.com/apk/res-auto"
+    tools:context="cn.ericweb.timetable.ReviseClassAdditionalInfo">
+
+    <item
+        android:id="@+id/revise_additional_info_sure"
+        android:icon="@drawable/ic_done_white_24dp"
+        android:orderInCategory="10"
+        apps:showAsAction="always"
+        android:title="@string/revise_class_additional_info_confirm" />
+</menu>

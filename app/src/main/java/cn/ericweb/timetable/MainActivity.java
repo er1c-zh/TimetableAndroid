@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -43,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         myToolbar.setSubtitle(R.string.version_info_simple);
-        myToolbar.setTitleTextColor(getResources().getColor(R.color.colorText));
-        myToolbar.setSubtitleTextColor(getResources().getColor(R.color.colorText));
         setSupportActionBar(myToolbar);
         myToolbar.setOnMenuItemClickListener(onMenuItemClick);
 
@@ -170,9 +167,6 @@ public class MainActivity extends AppCompatActivity {
             classTableContainer.addView(weekdayBar);
 
             // 添加课程表
-            // 添加一个scroll
-            ScrollView scrollView = new ScrollView(this);
-
             LinearLayout classTableRow = new LinearLayout(this);
             classTableRow.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -254,9 +248,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 classTableRow.addView(dayContainer);
             }
-            scrollView.addView(classTableRow);
-
-            classTableContainer.addView(scrollView);
+            classTableContainer.addView(classTableRow);
         }
     }
 
