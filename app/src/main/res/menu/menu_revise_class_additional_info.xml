@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/revise_additional_info_sure"
-        android:icon="@drawable/ic_done_white_24dp"
+        android:icon="@drawable/ic_done_black_24dp"
         android:orderInCategory="10"
         apps:showAsAction="always"
         android:title="@string/revise_class_additional_info_confirm" />

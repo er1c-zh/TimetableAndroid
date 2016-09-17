@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 绘制课程表
      */
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NewApi"})
     void showTables() {
         //check if table already exist
         SharedPreferences sharedPref = this.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, Context.MODE_PRIVATE);
@@ -235,7 +236,11 @@ public class MainActivity extends AppCompatActivity {
 
                         GradientDrawable classBackgroundDrawable = (GradientDrawable) getDrawable(R.drawable.classtable_class_background_radius_round_coner);
                         if (classBackgroundDrawable != null) {
-                            classBackgroundDrawable.setColor(originCourseAdditionalInfo.getColorId());
+                            if (originCourseAdditionalInfo.getColor() != -1) {
+                                classBackgroundDrawable.setColor(originCourseAdditionalInfo.getColor());
+                            } else {
+                                classBackgroundDrawable.setColor(getResources().getColor(R.color.colorClassBackground));
+                            }
                         }
 
                         classFrameLayout.setBackground(classBackgroundDrawable);

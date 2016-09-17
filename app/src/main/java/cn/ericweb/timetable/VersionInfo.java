@@ -16,7 +16,7 @@ public class VersionInfo extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.version_info_toolbar);
         toolbar.setTitle(R.string.version_info_simple);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

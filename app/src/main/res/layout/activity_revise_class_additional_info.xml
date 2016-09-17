@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="5dp"/>
+        android:elevation="5dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,14 +44,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_left_or_right"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_left_or_right">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="@dimen/padding_left_or_right"
                     android:text="@string/revise_class_additional_info_class_background_color_id" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/new_background_color"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="reviseColor"
+                    android:paddingRight="@dimen/padding_left_or_right"/>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

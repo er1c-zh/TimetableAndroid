@@ -12,7 +12,7 @@ public class CourseAppAdditionalInfo {
     public CourseAppAdditionalInfo(Course _course) {
         course = _course;
         shortOfCourseName = this.getShortOfCourseName(course.getCourseName());
-        colorId = Color.BLUE;
+        color = -1;
     }
 
     /**
@@ -69,12 +69,12 @@ public class CourseAppAdditionalInfo {
         return shortOfCourseName;
     }
 
-    public void setColorId(int _colorId) {
-        colorId = _colorId;
+    public void setColor(int _color) {
+        color = _color;
     }
 
-    public int getColorId() {
-        return colorId;
+    public int getColor() {
+        return color;
     }
 
     private String getShortOfCourseName(String _string) {
@@ -88,5 +88,5 @@ public class CourseAppAdditionalInfo {
     private static int LENGTH_SHORT_OF_NAME = 4;
     private Course course;
     private String shortOfCourseName;
-    private int colorId;
+    private int color;
 }
