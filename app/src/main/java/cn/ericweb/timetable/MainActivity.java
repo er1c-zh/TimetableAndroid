@@ -1,5 +1,8 @@
 package cn.ericweb.timetable;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,16 +20,21 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import cn.ericweb.timetable.domain.ClassTable;
 import cn.ericweb.timetable.domain.ClassTableAppAdditionalInfo;
@@ -57,7 +65,111 @@ public class MainActivity extends AppCompatActivity {
             appStatusEditor.putBoolean(KEY_IS_FIRST_RUN, false);
             appStatusEditor.commit();
         }
+
+        // 设置weekShowwing 为 当前周
+        SharedPreferences sharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
+        weekShowwing = sharedPref.getInt(AppConstant.NOW_WEEK, 1);
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            touchStartX = event.getX();
+            touchStartY = event.getY();
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            touchEndX = event.getX();
+            touchEndY = event.getY();
+
+            // 分析是否是左右滑动
+            if (touchEndX - touchStartX > 50) {
+                if (weekShowwing > 1) {
+                    LinearLayout classTableContainer = (LinearLayout) findViewById(R.id.classtable_container_new);
+                    classTableContainer.setId(R.id.classtable_container_old);
+
+                    LinearLayout classTableContainerNew = new LinearLayout(this);
+                    classTableContainerNew.setId(R.id.classtable_container_new);
+                    classTableContainerNew.setOrientation(LinearLayout.VERTICAL);
+                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.classtable_container);
+                    relativeLayout.addView(classTableContainerNew);
+
+                    float containerX = classTableContainer.getX();
+                    float containerWidth = classTableContainer.getWidth();
+                    ObjectAnimator dispear = ObjectAnimator.ofFloat(classTableContainer, "translationX", containerX, containerX + containerWidth, containerX + containerWidth);
+                    dispear.setDuration(1000);
+                    dispear.addListener(new Animator.AnimatorListener() {
+
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            showTables(--weekShowwing);
+                            LinearLayout classTable = (LinearLayout) findViewById(R.id.classtable_container_new);
+                            ObjectAnimator.ofFloat(classTable, "alpha", 0f, 1f, 1f).setDuration(1000).start();
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    dispear.start();
+                }
+            } else if (touchStartX - touchEndX > 50) {
+                if (weekShowwing < 52) {
+                    LinearLayout classTableContainer = (LinearLayout) findViewById(R.id.classtable_container_new);
+                    classTableContainer.setId(R.id.classtable_container_old);
+
+                    LinearLayout classTableContainerNew = new LinearLayout(this);
+                    classTableContainerNew.setId(R.id.classtable_container_new);
+                    classTableContainerNew.setOrientation(LinearLayout.VERTICAL);
+                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.classtable_container);
+                    relativeLayout.addView(classTableContainerNew);
+
+                    float containerX = classTableContainer.getX();
+                    float containerWidth = classTableContainer.getWidth();
+                    ObjectAnimator dispear = ObjectAnimator.ofFloat(classTableContainer, "translationX", containerX, containerX - containerWidth, containerX - containerWidth);
+                    dispear.setDuration(1000);
+                    dispear.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            showTables(++weekShowwing);
+                            LinearLayout classTable = (LinearLayout) findViewById(R.id.classtable_container_new);
+                            ObjectAnimator.ofFloat(classTable, "alpha", 0f, 1f, 1f).setDuration(1000).start();
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    dispear.start();
+                }
+            }
+        }
+        return true;
+    }
+
+    private float touchStartX;
+    private float touchStartY;
+    private float touchEndX;
+    private float touchEndY;
 
     /**
      * 检测是否是第一次运行
@@ -84,14 +196,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        showTables();
+        showTables(weekShowwing);
     }
 
     /**
      * 绘制课程表
      */
     @SuppressLint({"SetTextI18n", "NewApi"})
-    void showTables() {
+    void showTables(int week2show) {
         //check if table already exist
         SharedPreferences sharedPref = this.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, Context.MODE_PRIVATE);
         if (!sharedPref.contains(AppConstant.CLASSTABLE_KEY_MAIN)) {
@@ -114,8 +226,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // 获得课程表容器并清空
-            LinearLayout classTableContainer = (LinearLayout) findViewById(R.id.classtable_container);
-            classTableContainer.removeAllViews();
+            LinearLayout classTableContainer = (LinearLayout) findViewById(R.id.classtable_container_new);
 
             // 获得显示几天一周
             int dayToShow = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE).getBoolean(AppConstant.IF_WEEKENDS, true) ? 7 : 5;
@@ -141,10 +252,27 @@ public class MainActivity extends AppCompatActivity {
             blank.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassHeight, 0));
             TextView indexOfWeek = new TextView(this);
             indexOfWeek.setGravity(Gravity.CENTER);
+
+            // 计算时间
             SharedPreferences configSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
+
+            Date now = new Date();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
+            Date startDate;
+            try {
+                startDate = yyyymmdd.parse(configSharedPref.getString(AppConstant.FIRST_WEEK_START_MONDAY_DATE, yyyymmdd.format(now)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                startDate = now;
+            }
+
             Calendar tempCalendar = Calendar.getInstance();
+            tempCalendar.setTime(startDate);
+            // 这里-1是因为保存的日期是第一周的
+            tempCalendar.add(Calendar.DATE, (week2show - 1) * 7);
             int month = tempCalendar.get(Calendar.MONTH) + 1;
-            indexOfWeek.setText("W" + configSharedPref.getInt(AppConstant.NOW_WEEK, 0) + "\nM" + month);
+            indexOfWeek.setText("W" + week2show + "\nM" + month);
+
             blank.addView(indexOfWeek);
             weekdayBar.addView(blank);
 
@@ -156,10 +284,12 @@ public class MainActivity extends AppCompatActivity {
                 weekDayTextView.setGravity(Gravity.CENTER);
                 int temp = i + 1;
                 Calendar tempDateCalendar = Calendar.getInstance();
-                int todayOfWeek = tempDateCalendar.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : tempDateCalendar.get(Calendar.DAY_OF_WEEK) - 1;
-                tempDateCalendar.add(Calendar.DATE, temp - todayOfWeek);
+                tempDateCalendar.setTime(tempCalendar.getTime());
+                tempDateCalendar.add(Calendar.DATE, i);
+
                 weekDayTextView.setText(temp + "" + "\nD" + tempDateCalendar.get(Calendar.DAY_OF_MONTH));
-                if (todayOfWeek == temp) {
+                Calendar nowCalendar = Calendar.getInstance();
+                if (nowCalendar.get(Calendar.DAY_OF_YEAR) == tempDateCalendar.get(Calendar.DAY_OF_YEAR)) {
                     weekDayTextView.setTextColor(getResources().getColor(R.color.colorAccent));
                 }
                 weekDayFrameLayout.addView(weekDayTextView);
@@ -229,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
                     classText.setGravity(Gravity.CENTER);
 
                     // 附加的信息不为null 课程不为空 本周有课
-                    if (originCourseAdditionalInfo == null || originCourse.toString().equals("") || !originCourse.isCourseExistInWeek(getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE).getInt(AppConstant.NOW_WEEK, 1))) {
+                    if (originCourseAdditionalInfo == null || originCourse.toString().equals("") || !originCourse.isCourseExistInWeek(week2show)) {
                         classText.setText("");
                     } else {
                         classText.setText(originCourseAdditionalInfo.getString2Show());
@@ -352,6 +482,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, cn.ericweb.timetable.SettingsActivity.class);
         startActivity(intent);
     }
+
+    // 现在课程表正在展示的周数
+    private int weekShowwing;
 
     private static final String KEY_IS_FIRST_RUN = "cn.ericweb.IS_FIRST_RUN";
     //    菜单click listener

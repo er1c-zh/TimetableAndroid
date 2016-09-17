@@ -13,11 +13,19 @@
         android:background="?attr/colorPrimary"
         android:elevation="5dp"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/classtable_container"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/classtable_container_new"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+        <LinearLayout
+            android:id="@+id/classtable_container_old"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </RelativeLayout>
 </LinearLayout>
