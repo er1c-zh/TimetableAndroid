@@ -1,116 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cn.ericweb.timetable.SettingsActivity">
+    tools:context=".SettingsActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/settings_toolbar"
+        android:id="@+id/setting_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="5dp"/>
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/settings_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/settings_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/padding_left_or_right"
-            android:paddingRight="@dimen/padding_left_or_right">
-
-            <LinearLayout
-                android:id="@+id/settings_classtable"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/title_classtable"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/padding_top_or_bottom"
-                    android:paddingTop="@dimen/padding_top_or_bottom">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="课程表设置"
-                        android:textSize="@dimen/font_size_column_title" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/hr_big_height"
-                    android:background="@color/colorAccent" />
-
-                <RelativeLayout
-                    android:id="@+id/container_now_week"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="@dimen/padding_top_or_bottom"
-                    android:paddingTop="@dimen/padding_top_or_bottom"
-                    android:onClick="reviseNowWeek">
-
-                    <TextView
-                        android:id="@+id/title_now_week"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="@string/setting_classtable_now_week_title"
-                        tools:ignore="RtlHardcoded" />
-
-                    <TextView
-                        android:id="@+id/result_now_week"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        tools:ignore="RtlHardcoded" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/hr_small_height"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/colorAccent"
-                    tools:ignore="ObsoleteLayoutParam" />
-
-                <RelativeLayout
-                    android:id="@+id/container_if_weekends"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/padding_top_or_bottom"
-                    android:paddingTop="@dimen/padding_top_or_bottom">
-
-                    <TextView
-                        android:id="@+id/title_if_weekends"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="@string/setting_classtable_if_weekends_title"
-                        tools:ignore="RtlHardcoded" />
-
-                    <Switch
-                        android:id="@+id/result_if_weekends"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        tools:ignore="RtlHardcoded"
-                        android:onClick="reviseIfWeekends"/>
-
-                </RelativeLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
 </LinearLayout>

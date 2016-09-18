@@ -52,22 +52,6 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setSubtitle(R.string.version_info_simple);
         setSupportActionBar(myToolbar);
         myToolbar.setOnMenuItemClickListener(onMenuItemClick);
-
-        // 检查是否是第一次运行
-        if (isFirstRun()) {
-            SharedPreferences config = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
-            SettingsActivity.setDefaultConfig(config.edit());
-
-            // 设置不是第一次运行
-            SharedPreferences appStatus = getPreferences(MODE_PRIVATE);
-            SharedPreferences.Editor appStatusEditor = appStatus.edit();
-            appStatusEditor.putBoolean(KEY_IS_FIRST_RUN, false);
-            appStatusEditor.commit();
-        }
-
-        // 设置weekShowwing 为 当前周
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        weekShowwing = sharedPref.getInt(getString(R.string.setting_classtable_now_week_key), 1);
     }
 
     @Override
@@ -174,27 +158,9 @@ public class MainActivity extends AppCompatActivity {
     private float touchEndX;
     private float touchEndY;
 
-    /**
-     * 检测是否是第一次运行
-     *
-     * @return 是第一次返回true
-     */
-    private boolean isFirstRun() {
-        SharedPreferences appStatus = getPreferences(MODE_PRIVATE);
-        return appStatus.getBoolean(KEY_IS_FIRST_RUN, true);
-    }
-
-    /**
-     * 重绘课程表的表格
-     */
     @Override
     protected void onResume() {
         super.onResume();
-
-        // 刷新数据
-        SharedPreferences config = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
-        SettingsActivity.refreshConfigOnEveryStart(config);
-
         // 清理掉之前的课程表
         RelativeLayout classTableContainterRelative = (RelativeLayout) findViewById(R.id.classtable_container);
         classTableContainterRelative.removeAllViews();
@@ -202,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
         containerNew.setId(R.id.classtable_container_new);
         containerNew.setOrientation(LinearLayout.VERTICAL);
         classTableContainterRelative.addView(containerNew);
+
+
+        // 设置weekShowwing 为 当前周
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        weekShowwing = sharedPref.getInt(getString(R.string.setting_classtable_now_week_key), 1);
     }
 
     @Override
@@ -265,13 +236,11 @@ public class MainActivity extends AppCompatActivity {
             indexOfWeek.setGravity(Gravity.CENTER);
 
             // 计算时间
-            SharedPreferences configSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
-
             Date now = new Date();
             @SuppressLint("SimpleDateFormat") SimpleDateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
             Date startDate;
             try {
-                startDate = yyyymmdd.parse(configSharedPref.getString(AppConstant.FIRST_WEEK_START_MONDAY_DATE, yyyymmdd.format(now)));
+                startDate = yyyymmdd.parse(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.setting_classtable_now_week_first_week_start_date_key), yyyymmdd.format(now)));
             } catch (ParseException e) {
                 e.printStackTrace();
                 startDate = now;
@@ -490,16 +459,14 @@ public class MainActivity extends AppCompatActivity {
      * 展示设置页面
      */
     void showSettings() {
-//        Intent intent = new Intent(this, cn.ericweb.timetable.SettingsActivity.class);
-        Intent intent = new Intent(this, cn.ericweb.timetable.SettingNewActivity.class);
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
     // 现在课程表正在展示的周数
     private int weekShowwing;
 
-    private static final String KEY_IS_FIRST_RUN = "cn.ericweb.IS_FIRST_RUN";
-    //    菜单click listener
+    // 菜单click listener
     Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
