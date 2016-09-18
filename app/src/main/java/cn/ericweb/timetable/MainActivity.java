@@ -1,17 +1,16 @@
 package cn.ericweb.timetable;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -67,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 设置weekShowwing 为 当前周
-        SharedPreferences sharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
-        weekShowwing = sharedPref.getInt(AppConstant.NOW_WEEK, 1);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        weekShowwing = sharedPref.getInt(getString(R.string.setting_classtable_now_week_key), 1);
     }
 
     @Override
@@ -241,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             LinearLayout classTableContainer = (LinearLayout) findViewById(R.id.classtable_container_new);
 
             // 获得显示几天一周
-            int dayToShow = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE).getBoolean(AppConstant.IF_WEEKENDS, true) ? 7 : 5;
+            int dayToShow = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.setting_classtable_show_weekends_key), true) ? 7 : 5;
             // 获得尺寸数据
             // 宽度
             Point point = new Point();

@@ -12,8 +12,17 @@
 
     <!--settings-->
 
-    <string name="setting_classtable_now_week_title">当前周</string>
     <string name="setting_classtable_if_weekends_title">是否显示周末</string>
+
+    <string name="setting_classtable_title">课程表</string>
+    <string name="setting_classtable_now_week_key">setting_classtable_now_week</string>
+    <string name="setting_classtable_now_week_first_week_start_date_key">setting_classtable_now_week_first_week_start_date</string>
+    <string name="setting_classtable_now_week_title">当前周</string>
+    <string name="setting_classtable_now_week_summary">设置当前是第几周</string>
+    <string name="setting_classtable_show_weekends_key">setting_classtable_show_weekends_key</string>
+    <string name="setting_classtable_show_weekends_title">显示周末</string>
+    <string name="setting_classtable_show_weekends_summary">是否显示周末</string>
+
 
     <!--课程信息dialog-->
     <string name="dialog_class_info_course_name_hint">课程标题</string>

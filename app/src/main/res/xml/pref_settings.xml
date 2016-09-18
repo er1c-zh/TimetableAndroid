@@ -2,23 +2,16 @@
     <PreferenceCategory
         android:key="pref_key_storage_settings"
         android:title="">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_key_auto_delete"
-            android:summary="CheckBoxPreferenceSummary"
-            android:title="CheckBoxPreferenceTitle" />
-        <EditTextPreference
-            android:defaultValue="default"
-            android:key="edittexttext"
-            android:summary="editText summary"
-            android:title="editText" />
         <SwitchPreference
-            android:summary="switch summary"
-            android:title="switch" />
-        <cn.ericweb.timetable.ericpref.PreferenceNumberPicker
-            android:defaultValue="33"
-            android:key="pref_now_week"
-            android:title="hello" />
+            android:defaultValue="true"
+            android:key="@string/setting_classtable_show_weekends_key"
+            android:summary="@string/setting_classtable_show_weekends_summary"
+            android:title="@string/setting_classtable_show_weekends_title" />
+        <cn.ericweb.timetable.ericpref.PreferenceNowWeekNumberPicker
+            android:defaultValue="1"
+            android:key="@string/setting_classtable_now_week_key"
+            android:summary="@string/setting_classtable_now_week_summary"
+            android:title="@string/setting_classtable_now_week_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="hello2">
         <CheckBoxPreference
