@@ -45,6 +45,7 @@
         <activity
             android:name=".ReviseClassAdditionalInfo"
             android:theme="@style/timetable_light.NoActionBar" />
+        <activity android:name=".SettingNewActivity"></activity>
     </application>
 
 </manifest>

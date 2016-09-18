@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Timetable</string>
-    <string name="version_info_simple">v0.2.5.20160918 alpha</string>
+    <string name="version_info_simple">v0.2.6.20160918 alpha</string>
     <string name="version_info_detail">新特性\n1.修复了修改是否显示周末之后无法及时更新\n2.减少了动画时长\nbug\n1.虚拟按键与应用之间有一条空白\n2.华为无法在隐藏虚拟按键时重绘（估计华为自己有接口回头看看\nTODO:\n下一个就要上0.3.0a了，打算加上widget，重构有关设置Activity的方法。\n下一个beta打算添加自定义全部的颜色，背景</string>
 
     <!--首页-->
@@ -11,6 +11,7 @@
     <string name="title_activity_query_class_table">Query</string>
 
     <!--settings-->
+
     <string name="setting_classtable_now_week_title">当前周</string>
     <string name="setting_classtable_if_weekends_title">是否显示周末</string>
 
@@ -25,7 +26,4 @@
     <string name="revise_class_additional_info_confirm">确认修改</string>
     <string name="revise_class_additional_info_course_name_short_label">课程简称</string>
     <string name="revise_class_additional_info_class_background_color_id">背景颜色</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

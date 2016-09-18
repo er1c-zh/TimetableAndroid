@@ -491,7 +491,8 @@ public class MainActivity extends AppCompatActivity {
      * 展示设置页面
      */
     void showSettings() {
-        Intent intent = new Intent(this, cn.ericweb.timetable.SettingsActivity.class);
+//        Intent intent = new Intent(this, cn.ericweb.timetable.SettingsActivity.class);
+        Intent intent = new Intent(this, cn.ericweb.timetable.SettingNewActivity.class);
         startActivity(intent);
     }
 
