@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 22
         versionCode 1
-        versionName "0.2.2.20160915_alpha"
+        versionName "0.2.5.20160918_alpha"
     }
     buildTypes {
         release {
@@ -22,8 +22,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
-    compile 'com.android.support:design:24.1.1'
     compile files('src/main/libs/gson-2.3.1.jar')
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:design:24.2.1'
 }

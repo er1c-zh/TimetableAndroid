@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     float containerX = classTableContainer.getX();
                     float containerWidth = classTableContainer.getWidth();
                     ObjectAnimator dispear = ObjectAnimator.ofFloat(classTableContainer, "translationX", containerX, containerX + containerWidth, containerX + containerWidth);
-                    dispear.setDuration(1000);
+                    dispear.setDuration(500);
                     dispear.addListener(new Animator.AnimatorListener() {
 
                         @Override
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     float containerX = classTableContainer.getX();
                     float containerWidth = classTableContainer.getWidth();
                     ObjectAnimator dispear = ObjectAnimator.ofFloat(classTableContainer, "translationX", containerX, containerX - containerWidth, containerX - containerWidth);
-                    dispear.setDuration(1000);
+                    dispear.setDuration(500);
                     dispear.addListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator animation) {
@@ -162,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
                     dispear.start();
                 }
             }
+            touchStartX = 0;
+            touchStartY = 0;
+            touchEndX = 0;
+            touchEndY = 0;
         }
         return true;
     }
@@ -191,6 +195,14 @@ public class MainActivity extends AppCompatActivity {
         // 刷新数据
         SharedPreferences config = getSharedPreferences(AppConstant.SHARED_PREF_CONFIG, MODE_PRIVATE);
         SettingsActivity.refreshConfigOnEveryStart(config);
+
+        // 清理掉之前的课程表
+        RelativeLayout classTableContainterRelative = (RelativeLayout) findViewById(R.id.classtable_container);
+        classTableContainterRelative.removeAllViews();
+        LinearLayout containerNew = new LinearLayout(this);
+        containerNew.setId(R.id.classtable_container_new);
+        containerNew.setOrientation(LinearLayout.VERTICAL);
+        classTableContainterRelative.addView(containerNew);
     }
 
     @Override
