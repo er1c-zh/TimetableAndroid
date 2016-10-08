@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TimeTable.iml" filepath="$PROJECT_DIR$/TimeTable.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TimetableAndroid.iml" filepath="$PROJECT_DIR$/TimetableAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

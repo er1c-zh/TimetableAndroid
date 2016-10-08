@@ -52,6 +52,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/classtable_widget_info" />
         </receiver>
+
+        <activity
+            android:name=".HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/timetable_light.Base" />
     </application>
 
 </manifest>

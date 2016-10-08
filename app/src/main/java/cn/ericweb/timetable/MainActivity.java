@@ -32,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         myToolbar.setOnMenuItemClickListener(onMenuItemClick);
 
+
+        // TODO: 2016/10/9 这是为了测试新的启动ACTIVITY而设置的跳转
+        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
+        startActivity(intent);
+
     }
 
     @Override
@@ -213,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
      */
     void showRefresh() {
         Intent intent = new Intent(this, cn.ericweb.timetable.QueryClassTable.class);
+
         startActivity(intent);
     }
 
