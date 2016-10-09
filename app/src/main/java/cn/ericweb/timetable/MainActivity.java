@@ -5,18 +5,23 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import java.io.ByteArrayOutputStream;
 
 import cn.ericweb.timetable.util.AppConstant;
 
@@ -34,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         // TODO: 2016/10/9 这是为了测试新的启动ACTIVITY而设置的跳转
-        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
+//        startActivity(intent);
 
     }
 
@@ -164,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         showTables(weekShowwing);
+        refreshClasstableCache();
     }
 
     /**
@@ -205,6 +211,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * 刷新课程表截图
+     */
+    void refreshClasstableCache() {
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.classtable_container);
+        Bitmap bitmap = Bitmap.createBitmap(container.getWidth(), container.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        container.draw(canvas);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bitmapByte = baos.toByteArray();
+        String imageString = new String(Base64.encodeToString(bitmapByte, Base64.DEFAULT));
+
+        SharedPreferences classtableSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = classtableSharedPref.edit();
+        editor.putString(AppConstant.CLASSTABLE_KEY_CACHE, imageString);
+        editor.commit();
+    }
+
+    /**
      * 创建菜单
      */
     @Override
@@ -227,6 +252,8 @@ public class MainActivity extends AppCompatActivity {
      */
     void showVersionInfo() {
         Intent intent = new Intent(this, cn.ericweb.timetable.VersionInfo.class);
+//        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
+
         startActivity(intent);
     }
 

@@ -12,16 +12,11 @@ public class AppConstant {
     // 课程表的数据的KEY
     public static final String CLASSTABLE_KEY_MAIN = "cn.ericweb.CLASSTABLE_MAIN";
     public static final String CLASSTABLE_KEY_ADDITIONAL_INFO = "cn.ericweb.CLASSTABLE_ADDITIONAL_INFO";
+    public static final String CLASSTABLE_KEY_CACHE = "cn.ericweb.CLASSTABLE_CACHE";
 
     // 查询课程表的表单
     public static final String CLASSTABLE_ID = "schoolId";
     public static final String CLASSTABLE_PASSWORD = "pwd";
     public static final String CLASSTABLE_YEAR = "year";
     public static final String CLASSTABLE_SESSION = "session";
-
-    // 设置对应的key
-    public static final String SHARED_PREF_CONFIG = "cn.ericweb.CONFIG";
-    public static final String NOW_WEEK = "cn.ericweb.settings.classtable.NOW_WEEK";
-    public static final String FIRST_WEEK_START_MONDAY_DATE = "cn.ericweb.settings.classtable.NOW_WEEK_START_MONDAY_DATE";
-    public static final String IF_WEEKENDS = "cn.ericweb.settings.classtable.IF_WEEKENDS";
 }
