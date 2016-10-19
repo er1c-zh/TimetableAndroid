@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         showTables(weekShowwing);
-        refreshClasstableCache();
+//        refreshClasstableCache();
     }
 
     /**
@@ -251,8 +251,8 @@ public class MainActivity extends AppCompatActivity {
      * 显示版本信息
      */
     void showVersionInfo() {
-        Intent intent = new Intent(this, cn.ericweb.timetable.VersionInfo.class);
-//        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
+//        Intent intent = new Intent(this, cn.ericweb.timetable.VersionInfo.class);
+        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
 
         startActivity(intent);
     }

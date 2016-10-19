@@ -29,6 +29,7 @@ import cn.ericweb.timetable.domain.ClassTable;
 import cn.ericweb.timetable.domain.ClassTableAppAdditionalInfo;
 import cn.ericweb.timetable.domain.CourseAppAdditionalInfo;
 import cn.ericweb.timetable.domain.CourseInClassTable;
+import cn.ericweb.timetable.ericandroid.EricRoundedCornerTextview;
 import cn.ericweb.timetable.util.AppConstant;
 
 
@@ -187,7 +188,7 @@ public class ClasstableFragment extends Fragment {
                         }
                     }
                     // 创建展示的TextView
-                    TextView classText = new TextView(getContext());
+                    EricRoundedCornerTextview classText = new EricRoundedCornerTextview(getContext());
                     classText.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
                     classText.setGravity(Gravity.CENTER);
 
@@ -197,17 +198,20 @@ public class ClasstableFragment extends Fragment {
                     } else {
                         classText.setText(originCourseAdditionalInfo.getString2Show());
 
-                        GradientDrawable classBackgroundDrawable = (GradientDrawable) getContext().getDrawable(R.drawable.classtable_class_background_radius_round_coner);
-                        if (classBackgroundDrawable != null) {
-                            if (originCourseAdditionalInfo.getColor() != -1) {
-                                classBackgroundDrawable.setColor(originCourseAdditionalInfo.getColor());
-                            } else {
-                                classBackgroundDrawable.setColor(getResources().getColor(R.color.colorClassBackground));
-                            }
+//                        GradientDrawable classBackgroundDrawable = (GradientDrawable) getContext().getDrawable(R.drawable.classtable_class_background_radius_round_coner);
+//                        if (classBackgroundDrawable != null) {
+//                            if (originCourseAdditionalInfo.getColor() != -1) {
+//                                classBackgroundDrawable.setColor(originCourseAdditionalInfo.getColor());
+//                            } else {
+//                                classBackgroundDrawable.setColor(getResources().getColor(R.color.colorClassBackground));
+//                            }
+//                        }
+//
+//                        classFrameLayout.setBackground(classBackgroundDrawable);
+
+                        if (originCourseAdditionalInfo.getColor() != -1) {
+                            classText.setmBgColor(originCourseAdditionalInfo.getColor());
                         }
-
-                        classFrameLayout.setBackground(classBackgroundDrawable);
-
                         classText.setOnClickListener(classInfoListener);
                     }
 

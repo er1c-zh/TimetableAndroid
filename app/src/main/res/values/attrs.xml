@@ -9,5 +9,10 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="EricRoundedCornerTextview">
+        <attr name="bgColor" format="color" />
+        <attr name="cornerSize" format="integer" />
+    </declare-styleable>
+
     <dimen name="actionBarSize">10dp</dimen>
 </resources>
