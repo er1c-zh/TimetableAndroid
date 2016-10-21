@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -42,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
 //        startActivity(intent);
 
+        // 保存屏幕的Density
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int densityDpi = metric.densityDpi;  // 屏幕密度DPI（120 / 160 / 240）
+        SharedPreferences config = getSharedPreferences(AppConstant.SHARED_PREF_PHONE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = config.edit();
+        editor.putInt(AppConstant.PHONE_DENSITY_DPI, densityDpi);
+        editor.commit();
     }
 
     @Override

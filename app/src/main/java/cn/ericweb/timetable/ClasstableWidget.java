@@ -112,8 +112,8 @@ public class ClasstableWidget extends AppWidgetProvider {
             // 高度
             int perClassHeight = containerHeight / (classTable.getCourseNumberPerDay() + 1);
             // font size
-            int fontSize = perClassHeight * perClassWidth / 350;
-
+//            int fontSize = perClassHeight * perClassWidth / 500;
+            int fontSize = 8;
             // 添加周几
             LinearLayout weekdayBar = new LinearLayout(context);
             weekdayBar.setOrientation(LinearLayout.HORIZONTAL);
@@ -144,6 +144,8 @@ public class ClasstableWidget extends AppWidgetProvider {
             tempCalendar.add(Calendar.DATE, (week2show - 1) * 7);
             int month = tempCalendar.get(Calendar.MONTH) + 1;
             indexOfWeek.setText("W" + week2show + "\nM" + month);
+
+            indexOfWeek.setText("w" + containerWidth + "\nh" + containerHeight);
 
             indexOfWeek.measure(perClassWidth, perClassHeight);
             indexOfWeek.layout(0, 0, perClassWidth, perClassHeight);
@@ -297,6 +299,9 @@ public class ClasstableWidget extends AppWidgetProvider {
 
             classTableContainer.addView(classTableRow);
 
+            classTableContainer.setBackgroundColor(Color.BLACK);
+            classTableContainer.setAlpha((float) 0.3);
+
             classTableContainer.measure(containerWidth, containerHeight);
             classTableContainer.layout(0, 0, containerWidth, containerHeight);
             classTableContainer.setDrawingCacheEnabled(true);
@@ -313,11 +318,13 @@ public class ClasstableWidget extends AppWidgetProvider {
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        SharedPreferences config = context.getSharedPreferences(AppConstant.SHARED_PREF_PHONE, MODE_PRIVATE);
         SharedPreferences widgetConfig = context.getSharedPreferences(AppConstant.SHARED_PREF_WIDGET, MODE_PRIVATE);
+        float scale = context.getResources().getDisplayMetrics().density;
         SharedPreferences.Editor editor = widgetConfig.edit();
 
-        editor.putInt(AppConstant.WIDGET_KEY_WIDTH, newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
-        editor.putInt(AppConstant.WIDGET_KEY_HEIGHT, newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
+        editor.putInt(AppConstant.WIDGET_KEY_WIDTH, (int) (newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) * scale + 0.5f));
+        editor.putInt(AppConstant.WIDGET_KEY_HEIGHT, (int) (newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) * scale + 0.5f));
 
         editor.commit();
         updateAppWidget(context, appWidgetManager, appWidgetId);

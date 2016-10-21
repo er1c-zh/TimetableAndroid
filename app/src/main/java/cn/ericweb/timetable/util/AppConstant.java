@@ -9,6 +9,7 @@ public class AppConstant {
     // sharedPreferance的key
     public static final String SHARED_PREF_CLASSTABLE = "cn.ericweb.CLASSTABLE";
     public static final String SHARED_PREF_WIDGET = "cn.ericweb.WIDGET";
+    public static final String SHARED_PREF_PHONE = "cn.ericweb.PHONE";
 
     // 课程表的数据的KEY
     public static final String CLASSTABLE_KEY_MAIN = "cn.ericweb.CLASSTABLE_MAIN";
@@ -24,4 +25,7 @@ public class AppConstant {
     public static final String CLASSTABLE_PASSWORD = "pwd";
     public static final String CLASSTABLE_YEAR = "year";
     public static final String CLASSTABLE_SESSION = "session";
+
+    // 机器的环境
+    public static final String PHONE_DENSITY_DPI = "cn.ericweb.PHONE_DENSITY_DPI";
 }
