@@ -15,6 +15,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextPaint;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -68,7 +69,7 @@ public class ClasstableWidget extends AppWidgetProvider {
         SharedPreferences widgetConfig = context.getSharedPreferences(AppConstant.SHARED_PREF_WIDGET, MODE_PRIVATE);
         int widgetWidth = widgetConfig.getInt(AppConstant.WIDGET_KEY_WIDTH, 720);
         int widgetHeight = widgetConfig.getInt(AppConstant.WIDGET_KEY_HEIGHT, 1280);
-
+        // TODO: 2016/10/22 加一个监控情况的IF
         try {
             SharedPreferences config = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences classtableSharedPref = context.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, MODE_PRIVATE);
@@ -100,7 +101,6 @@ public class ClasstableWidget extends AppWidgetProvider {
             classTable = gson.fromJson(bundle.getString(CLASSTABLE_JSON), ClassTable.class);
             classTableAppAdditionalInfo = gson.fromJson(bundle.getString(CLASSTABLE_ADDITIONAL_JSON), ClassTableAppAdditionalInfo.class);
 
-
             // 获得课程表容器并清空
             LinearLayout classTableContainer = new LinearLayout(context);
             classTableContainer.setOrientation(LinearLayout.VERTICAL);
@@ -112,7 +112,7 @@ public class ClasstableWidget extends AppWidgetProvider {
             // 高度
             int perClassHeight = containerHeight / (classTable.getCourseNumberPerDay() + 1);
             // font size
-            int fontSize = perClassHeight / 5;
+            int fontSize = perClassHeight * perClassWidth / 350;
 
             // 添加周几
             LinearLayout weekdayBar = new LinearLayout(context);
@@ -122,7 +122,10 @@ public class ClasstableWidget extends AppWidgetProvider {
             indexOfWeek.setGravity(Gravity.CENTER);
             indexOfWeek.setWidth(perClassWidth);
             indexOfWeek.setHeight(perClassHeight);
+            indexOfWeek.setBorderWidth(1);
             indexOfWeek.setTextSize(fontSize);
+            TextPaint paint = indexOfWeek.getPaint();
+            paint.setFakeBoldText(true);
 
             // 计算时间
             Date now = new Date();
@@ -142,10 +145,6 @@ public class ClasstableWidget extends AppWidgetProvider {
             int month = tempCalendar.get(Calendar.MONTH) + 1;
             indexOfWeek.setText("W" + week2show + "\nM" + month);
 
-
-            indexOfWeek.setText("W : " + perClassWidth + "\nH : " + perClassHeight);
-
-
             indexOfWeek.measure(perClassWidth, perClassHeight);
             indexOfWeek.layout(0, 0, perClassWidth, perClassHeight);
             indexOfWeek.setDrawingCacheEnabled(true);
@@ -157,6 +156,11 @@ public class ClasstableWidget extends AppWidgetProvider {
                 weekDayTextView.setGravity(Gravity.CENTER);
                 weekDayTextView.setWidth(perClassWidth);
                 weekDayTextView.setHeight(perClassHeight);
+                weekDayTextView.setBorderWidth(1);
+
+                paint = weekDayTextView.getPaint();
+                paint.setFakeBoldText(true);
+
                 weekDayTextView.setTextSize(fontSize);
 
                 int temp = i + 1;
@@ -200,7 +204,13 @@ public class ClasstableWidget extends AppWidgetProvider {
                 classIndexText.setGravity(Gravity.CENTER);
                 classIndexText.setWidth(perClassWidth);
                 classIndexText.setHeight(perClassHeight);
+                classIndexText.setBorderWidth(1);
+
+                paint = classIndexText.getPaint();
+                paint.setFakeBoldText(true);
+
                 classIndexText.setTextSize(fontSize);
+
                 classIndexText.setText(hour + ":" + minute + (minute == 0 ? "0" : "") + "\n" + classIndex);
 
                 // 更新时间
@@ -237,6 +247,8 @@ public class ClasstableWidget extends AppWidgetProvider {
                     EricRoundedCornerTextview classText = new EricRoundedCornerTextview(context);
                     classText.setTextSize(fontSize);
                     classText.setGravity(Gravity.CENTER);
+                    classText.setBorderWidth(1);
+
                     // 获得最初的CourseInClassTable
                     CourseInClassTable originCourse = classTable.getCourseInClassTable(day, classIndex);
                     // 获得附加信息
@@ -248,7 +260,6 @@ public class ClasstableWidget extends AppWidgetProvider {
                     for (int isCourseEqualIndex = classIndex + 1; true; isCourseEqualIndex++) {
                         if (!classTable.getCourseInClassTable(day, isCourseEqualIndex).equals(originCourse) || isCourseEqualIndex >= classTable.getCourseNumberPerDay()) {
                             classHeight = perClassHeight * (isCourseEqualIndex - classIndex);
-//                            classFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassHeight * (isCourseEqualIndex - classIndex), 0));
                             classIndex = isCourseEqualIndex - 1;
                             break;
                         }
@@ -270,7 +281,6 @@ public class ClasstableWidget extends AppWidgetProvider {
                     classText.measure(perClassWidth, perClassHeight);
                     classText.layout(0, 0, perClassWidth, classHeight);
                     classText.setDrawingCacheEnabled(true);
-//                    classFrameLayout.addView(classText);
                     dayContainer.addView(classText);
                 }
 
@@ -287,45 +297,16 @@ public class ClasstableWidget extends AppWidgetProvider {
 
             classTableContainer.addView(classTableRow);
 
-            classTableContainer.setBackgroundColor(Color.BLACK);
-
             classTableContainer.measure(containerWidth, containerHeight);
             classTableContainer.layout(0, 0, containerWidth, containerHeight);
             classTableContainer.setDrawingCacheEnabled(true);
 
             Bitmap bitmap = classTableContainer.getDrawingCache();
             views.setImageViewBitmap(R.id.imageView, bitmap);
-
-//             Inflate the layout for this fragment
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-//        LinearLayout container = new LinearLayout(context);
-//        container.setOrientation(LinearLayout.VERTICAL);
-//        EricRoundedCornerTextview text2 = new EricRoundedCornerTextview(context);
-//        text2.setText("hello text2");
-//        text2.measure(300, 300);
-//        text2.layout(0, 0, 300, 300);
-//        text2.setDrawingCacheEnabled(true);
-//
-//        EricRoundedCornerTextview myView = new EricRoundedCornerTextview(context);
-//        myView.setText("hello image");
-//        myView.setmBgColor(Color.BLACK);
-//        myView.setmCornerSize(30);
-//        myView.measure(150,150);
-//        myView.layout(0,0,150,150);
-//        myView.setDrawingCacheEnabled(true);
-//
-//        container.addView(text2);
-//        container.addView(myView);
-//
-//        container.measure(450, 300);
-//        container.layout(0, 0, 450, 300);
-//        container.setDrawingCacheEnabled(true);
-//
-//        Bitmap bitmap=container.getDrawingCache();
-//        views.setImageViewBitmap(R.id.imageView, bitmap);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
