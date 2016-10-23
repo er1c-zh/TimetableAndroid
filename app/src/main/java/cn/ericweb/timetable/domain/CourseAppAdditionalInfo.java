@@ -12,7 +12,7 @@ public class CourseAppAdditionalInfo {
     public CourseAppAdditionalInfo(Course _course) {
         course = _course;
         shortOfCourseName = this.getShortOfCourseName(course.getCourseName());
-        color = -1;
+        color = Color.parseColor("#00000000");
     }
 
     /**

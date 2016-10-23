@@ -22,8 +22,9 @@
     <string name="setting_classtable_show_weekends_summary">是否显示周末</string>
 
     <string name="setting_classtable_widget_title">Widget设置</string>
-
-
+    <string name="setting_classtable_widget_text_color_title">字体颜色</string>
+    <string name="setting_classtable_widget_text_color_summary">设置Widget的字体颜色</string>
+    <string name="setting_classtable_widget_text_color_key">setting_classtable_widget_text_color_key</string>
     <!--课程信息dialog-->
     <string name="dialog_class_info_course_name_hint">课程标题</string>
     <string name="dialog_class_info_course_name_short_hint">课程简称</string>

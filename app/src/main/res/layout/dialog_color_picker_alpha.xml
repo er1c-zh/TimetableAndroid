@@ -2,37 +2,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical">1
 
-    <SeekBar
-        android:id="@+id/seekBarRed"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <SeekBar
+            android:id="@+id/seekBarRed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:max="255"
+            android:progressDrawable="@drawable/pref_dialog_color_picker_seekbar_red"
+            android:thumb="@drawable/pref_color_picker_seekbar_thumb" />
+
+        <SeekBar
+            android:id="@+id/seekBarGreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:max="255"
+            android:progressDrawable="@drawable/pref_dialog_color_picker_seekbar_green"
+            android:thumb="@drawable/pref_color_picker_seekbar_thumb" />
+
+        <SeekBar
+            android:id="@+id/seekBarBlue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:max="255"
+            android:progressDrawable="@drawable/pref_dialog_color_picker_seekbar_blue"
+            android:thumb="@drawable/pref_color_picker_seekbar_thumb" />
+
+        <SeekBar
+            android:id="@+id/seekBarAlpha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:max="100"
+            android:progressDrawable="@drawable/pref_dialog_color_picker_seekbar_alpha"
+            android:thumb="@drawable/pref_color_picker_seekbar_thumb" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:progressDrawable="@drawable/pref_dialog_color_picker_seekbar_red"
-        android:thumb="@drawable/pref_color_picker_seekbar_thumb" />
+        android:layout_margin="25dp"
+        android:background="@drawable/alpha_background_black_white">
 
-    <SeekBar
-        android:id="@+id/seekBarGreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:progressDrawable="@drawable/pref_dialog_color_picker_seekbar_green"
-        android:thumb="@drawable/pref_color_picker_seekbar_thumb" />
+        <TextView
+            android:id="@+id/color_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent" />
+    </LinearLayout>
 
-    <SeekBar
-        android:id="@+id/seekBarBlue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:progressDrawable="@drawable/pref_dialog_color_picker_seekbar_blue"
-        android:thumb="@drawable/pref_color_picker_seekbar_thumb" />
-
-    <SeekBar
-        android:id="@+id/seekBarAlpha"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:progressDrawable="@drawable/pref_dialog_color_picker_seekbar_alpha"
-        android:thumb="@drawable/pref_color_picker_seekbar_thumb" />
 </LinearLayout>
