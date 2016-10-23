@@ -112,8 +112,7 @@ public class ClasstableWidget extends AppWidgetProvider {
             // 高度
             int perClassHeight = containerHeight / (classTable.getCourseNumberPerDay() + 1);
             // font size
-//            int fontSize = perClassHeight * perClassWidth / 500;
-            int fontSize = 13;
+            int fontSize = perClassHeight * perClassWidth / 440;
             // 添加周几
             LinearLayout weekdayBar = new LinearLayout(context);
             weekdayBar.setOrientation(LinearLayout.HORIZONTAL);
@@ -297,10 +296,9 @@ public class ClasstableWidget extends AppWidgetProvider {
             classTableRow.layout(0, 0, containerWidth, containerHeight - perClassHeight);
             classTableRow.setDrawingCacheEnabled(true);
 
-            classTableContainer.addView(classTableRow);
+            classTableContainer.setBackgroundColor(Color.parseColor("#50000000"));
 
-            classTableContainer.setBackgroundColor(Color.BLACK);
-            classTableContainer.setAlpha((float) 0.3);
+            classTableContainer.addView(classTableRow);
 
             classTableContainer.measure(containerWidth, containerHeight);
             classTableContainer.layout(0, 0, containerWidth, containerHeight);
@@ -323,8 +321,8 @@ public class ClasstableWidget extends AppWidgetProvider {
         float scale = context.getResources().getDisplayMetrics().density;
         SharedPreferences.Editor editor = widgetConfig.edit();
 
-        editor.putInt(AppConstant.WIDGET_KEY_WIDTH, (int) (newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) * scale + 0.5f - 2 * context.getResources().getDimension(R.dimen.widget_margin)));
-        editor.putInt(AppConstant.WIDGET_KEY_HEIGHT, (int) (newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) * scale + 0.5f - 2 * context.getResources().getDimension(R.dimen.widget_margin)));
+        editor.putInt(AppConstant.WIDGET_KEY_WIDTH, (int) (newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) * scale + 0.5f));
+        editor.putInt(AppConstant.WIDGET_KEY_HEIGHT, (int) (newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) * scale + 0.5f));
 
         editor.commit();
         updateAppWidget(context, appWidgetManager, appWidgetId);
