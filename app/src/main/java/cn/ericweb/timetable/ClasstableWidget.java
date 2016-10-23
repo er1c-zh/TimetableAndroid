@@ -60,6 +60,7 @@ import static cn.ericweb.timetable.ClasstableFragment.WEEK_TO_SHOW;
  */
 public class ClasstableWidget extends AppWidgetProvider {
 
+    public static int FONT_SCALE = 440;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -112,7 +113,7 @@ public class ClasstableWidget extends AppWidgetProvider {
             // 高度
             int perClassHeight = containerHeight / (classTable.getCourseNumberPerDay() + 1);
             // font size
-            int fontSize = perClassHeight * perClassWidth / 440;
+            int fontSize = perClassHeight * perClassWidth / ClasstableWidget.FONT_SCALE;
             // 添加周几
             LinearLayout weekdayBar = new LinearLayout(context);
             weekdayBar.setOrientation(LinearLayout.HORIZONTAL);

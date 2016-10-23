@@ -13,4 +13,11 @@
             android:summary="@string/setting_classtable_now_week_summary"
             android:title="@string/setting_classtable_now_week_title" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_widget_settings"
+        android:title="@string/setting_classtable_widget_title">
+        <cn.ericweb.timetable.ericpref.PreferenceColorPickerWithAlpha
+            android:key="hello"
+            android:title="helloo" />
+    </PreferenceCategory>
 </PreferenceScreen>

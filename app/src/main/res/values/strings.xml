@@ -21,6 +21,8 @@
     <string name="setting_classtable_show_weekends_title">显示周末</string>
     <string name="setting_classtable_show_weekends_summary">是否显示周末</string>
 
+    <string name="setting_classtable_widget_title">Widget设置</string>
+
 
     <!--课程信息dialog-->
     <string name="dialog_class_info_course_name_hint">课程标题</string>
