@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -37,11 +38,6 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setSubtitle(R.string.version_info_simple);
         setSupportActionBar(myToolbar);
         myToolbar.setOnMenuItemClickListener(onMenuItemClick);
-
-
-        // TODO: 2016/10/9 这是为了测试新的启动ACTIVITY而设置的跳转
-//        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
-//        startActivity(intent);
 
         // 保存屏幕的Density
         DisplayMetrics metric = new DisplayMetrics();
@@ -260,8 +256,7 @@ public class MainActivity extends AppCompatActivity {
      * 显示版本信息
      */
     void showVersionInfo() {
-//        Intent intent = new Intent(this, cn.ericweb.timetable.VersionInfo.class);
-        Intent intent = new Intent(this, cn.ericweb.timetable.HomeActivity.class);
+        Intent intent = new Intent(this, cn.ericweb.timetable.VersionInfo.class);
 
         startActivity(intent);
     }
