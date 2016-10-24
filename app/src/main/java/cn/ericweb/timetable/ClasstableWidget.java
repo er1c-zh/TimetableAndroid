@@ -6,32 +6,16 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.Toolbar;
 import android.text.TextPaint;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,12 +29,9 @@ import cn.ericweb.timetable.domain.CourseInClassTable;
 import cn.ericweb.timetable.ericandroid.EricRoundedCornerTextview;
 import cn.ericweb.timetable.util.AppConstant;
 
-import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 import static cn.ericweb.timetable.ClasstableFragment.CLASSTABLE_ADDITIONAL_JSON;
 import static cn.ericweb.timetable.ClasstableFragment.CLASSTABLE_JSON;
-import static cn.ericweb.timetable.ClasstableFragment.CONTAINER_HEIGHT;
-import static cn.ericweb.timetable.ClasstableFragment.CONTAINER_WIDTH;
 import static cn.ericweb.timetable.ClasstableFragment.FIRST_WEEK_DATE_STRING;
 import static cn.ericweb.timetable.ClasstableFragment.IF_SHOW_WEEKENDS;
 import static cn.ericweb.timetable.ClasstableFragment.WEEK_TO_SHOW;
@@ -60,21 +41,22 @@ import static cn.ericweb.timetable.ClasstableFragment.WEEK_TO_SHOW;
  */
 public class ClasstableWidget extends AppWidgetProvider {
 
-    public static int FONT_SCALE = 440;
+    public static int FONT_SCALE = 450;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.classtable_widget);
 
-        SharedPreferences widgetConfig = context.getSharedPreferences(AppConstant.SHARED_PREF_WIDGET, MODE_PRIVATE);
-        int widgetWidth = widgetConfig.getInt(AppConstant.WIDGET_KEY_WIDTH, 720);
-        int widgetHeight = widgetConfig.getInt(AppConstant.WIDGET_KEY_HEIGHT, 1280);
         // TODO: 2016/10/22 加一个监控情况的IF
         try {
             SharedPreferences config = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences classtableSharedPref = context.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, MODE_PRIVATE);
+            SharedPreferences widgetConfig = context.getSharedPreferences(AppConstant.SHARED_PREF_WIDGET, MODE_PRIVATE);
 
+            // 取得颜色设置
+            int fontColor = config.getInt(context.getString(R.string.setting_classtable_widget_text_color_key), Color.TRANSPARENT);
+            int backgroundColor = config.getInt(context.getString(R.string.setting_classtable_widget_background_color_key), Color.TRANSPARENT);
             // 防止第一次或清空了数据
             String jsonClasstable = classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, "");
             String jsonClasstableAdditionalInfo = classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, "");
@@ -86,11 +68,13 @@ public class ClasstableWidget extends AppWidgetProvider {
             bundle.putBoolean(ClasstableFragment.IF_SHOW_WEEKENDS, config.getBoolean(context.getString(R.string.setting_classtable_show_weekends_key), true));
             bundle.putString(ClasstableFragment.CLASSTABLE_JSON, classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, ""));
             bundle.putString(ClasstableFragment.CLASSTABLE_ADDITIONAL_JSON, classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, ""));
+
+
             // 获得尺寸数据
             // 宽度
-            int containerWidth = widgetWidth;
+            int containerWidth = widgetConfig.getInt(AppConstant.WIDGET_KEY_WIDTH, 720);
             // 高度
-            int containerHeight = widgetHeight;
+            int containerHeight = widgetConfig.getInt(AppConstant.WIDGET_KEY_HEIGHT, 1280);
             bundle.putInt(ClasstableFragment.CONTAINER_WIDTH, containerWidth);
             bundle.putInt(ClasstableFragment.CONTAINER_HEIGHT, containerHeight);
             bundle.putString(ClasstableFragment.FIRST_WEEK_DATE_STRING, config.getString(context.getString(R.string.setting_classtable_now_week_first_week_start_date_key), ""));
@@ -124,6 +108,7 @@ public class ClasstableWidget extends AppWidgetProvider {
             indexOfWeek.setHeight(perClassHeight);
             indexOfWeek.setBorderWidth(1);
             indexOfWeek.setTextSize(fontSize);
+            indexOfWeek.setTextColor(fontColor);
             TextPaint paint = indexOfWeek.getPaint();
             paint.setFakeBoldText(true);
 
@@ -145,8 +130,6 @@ public class ClasstableWidget extends AppWidgetProvider {
             int month = tempCalendar.get(Calendar.MONTH) + 1;
             indexOfWeek.setText("W" + week2show + "\nM" + month);
 
-            indexOfWeek.setText("w" + containerWidth + "\nh" + containerHeight);
-
             indexOfWeek.measure(perClassWidth, perClassHeight);
             indexOfWeek.layout(0, 0, perClassWidth, perClassHeight);
             indexOfWeek.setDrawingCacheEnabled(true);
@@ -155,15 +138,17 @@ public class ClasstableWidget extends AppWidgetProvider {
 
             for (int i = 0; i < dayToShow; i++) {
                 EricRoundedCornerTextview weekDayTextView = new EricRoundedCornerTextview(context);
+                weekDayTextView.setBorderWidth(1);
                 weekDayTextView.setGravity(Gravity.CENTER);
                 weekDayTextView.setWidth(perClassWidth);
                 weekDayTextView.setHeight(perClassHeight);
                 weekDayTextView.setBorderWidth(1);
+                weekDayTextView.setTextSize(fontSize);
+                weekDayTextView.setTextColor(fontColor);
 
                 paint = weekDayTextView.getPaint();
                 paint.setFakeBoldText(true);
 
-                weekDayTextView.setTextSize(fontSize);
 
                 int temp = i + 1;
                 Calendar tempDateCalendar = Calendar.getInstance();
@@ -203,15 +188,17 @@ public class ClasstableWidget extends AppWidgetProvider {
             ArrayList<Integer> classIntervalArrayList = classTable.getIntervalPerCourse();
             for (int classIndex = 1; classIndex <= classTable.getCourseNumberPerDay(); classIndex++) {
                 EricRoundedCornerTextview classIndexText = new EricRoundedCornerTextview(context);
+                classIndexText.setBorderWidth(1);
                 classIndexText.setGravity(Gravity.CENTER);
                 classIndexText.setWidth(perClassWidth);
                 classIndexText.setHeight(perClassHeight);
                 classIndexText.setBorderWidth(1);
+                classIndexText.setTextSize(fontSize);
+                classIndexText.setTextColor(fontColor);
 
                 paint = classIndexText.getPaint();
                 paint.setFakeBoldText(true);
 
-                classIndexText.setTextSize(fontSize);
 
                 classIndexText.setText(hour + ":" + minute + (minute == 0 ? "0" : "") + "\n" + classIndex);
 
@@ -247,7 +234,9 @@ public class ClasstableWidget extends AppWidgetProvider {
                     // 循环每个周
                     // 创建展示的TextView
                     EricRoundedCornerTextview classText = new EricRoundedCornerTextview(context);
+                    classText.setBorderWidth(1);
                     classText.setTextSize(fontSize);
+                    classText.setTextColor(fontColor);
                     classText.setGravity(Gravity.CENTER);
                     classText.setBorderWidth(1);
 
@@ -276,7 +265,8 @@ public class ClasstableWidget extends AppWidgetProvider {
                     } else {
                         classText.setText(originCourseAdditionalInfo.getString2Show());
                         if (originCourseAdditionalInfo.getColor() != -1) {
-                            classText.setmBgColor(originCourseAdditionalInfo.getColor());
+                            int temp = originCourseAdditionalInfo.getColor();
+                            classText.setmBgColor(Color.argb(Color.alpha(backgroundColor), Color.red(temp), Color.green(temp), Color.blue(temp)));
                         }
                     }
 
@@ -297,7 +287,7 @@ public class ClasstableWidget extends AppWidgetProvider {
             classTableRow.layout(0, 0, containerWidth, containerHeight - perClassHeight);
             classTableRow.setDrawingCacheEnabled(true);
 
-            classTableContainer.setBackgroundColor(Color.parseColor("#50000000"));
+            classTableContainer.setBackgroundColor(backgroundColor);
 
             classTableContainer.addView(classTableRow);
 

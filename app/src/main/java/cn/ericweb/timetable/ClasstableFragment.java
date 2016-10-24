@@ -189,6 +189,7 @@ public class ClasstableFragment extends Fragment {
                     }
                     // 创建展示的TextView
                     EricRoundedCornerTextview classText = new EricRoundedCornerTextview(getContext());
+                    classText.setBorderWidth(1);
                     classText.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
                     classText.setGravity(Gravity.CENTER);
 

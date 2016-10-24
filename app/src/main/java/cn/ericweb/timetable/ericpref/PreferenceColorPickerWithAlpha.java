@@ -62,7 +62,7 @@ public class PreferenceColorPickerWithAlpha extends DialogPreference {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 sample.setBackgroundColor(Color.rgb(red.getProgress(), green.getProgress(), blue.getProgress()));
-                sample.setAlpha((float) (alpha.getProgress() / 100.0));
+                sample.setAlpha((float) (alpha.getProgress() / 255.0));
             }
 
             @Override
@@ -104,7 +104,7 @@ public class PreferenceColorPickerWithAlpha extends DialogPreference {
 
         TextView sample = (TextView) view.findViewById(R.id.color_info);
         sample.setBackgroundColor(Color.rgb(redInt, greenInt, blueInt));
-        sample.setAlpha((float) (alphaInt / 100.0));
+        sample.setAlpha((float) (alphaInt / 255.0));
     }
 
     @Override
