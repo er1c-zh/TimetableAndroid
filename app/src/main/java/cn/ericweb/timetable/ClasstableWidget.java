@@ -64,7 +64,23 @@ public class ClasstableWidget extends AppWidgetProvider {
                 return;
             }
             Bundle bundle = new Bundle();
-            bundle.putInt(ClasstableFragment.WEEK_TO_SHOW, 1);
+            // 计算当前周
+            // TODO: 2016/10/26 清理代码 加下划线是因为与下面的变量名冲突了
+            Calendar _now = Calendar.getInstance();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat _yyyymmdd = new SimpleDateFormat("yyyyMMdd");
+            Date _startDate;
+            try {
+                _startDate = _yyyymmdd.parse(PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.setting_classtable_now_week_first_week_start_date_key), ""));
+            } catch (ParseException e) {
+                _startDate = new Date();
+            }
+            Calendar _startCalendar = Calendar.getInstance();
+            _startCalendar.setTime(_startDate);
+
+            long tempWeekCal = (_now.getTimeInMillis() - _startCalendar.getTimeInMillis()) / (7 * 1000 * 24 * 60 * 60) + 1;
+            int tempWeek = (int) tempWeekCal;
+
+            bundle.putInt(ClasstableFragment.WEEK_TO_SHOW, tempWeek);
             bundle.putBoolean(ClasstableFragment.IF_SHOW_WEEKENDS, config.getBoolean(context.getString(R.string.setting_classtable_show_weekends_key), true));
             bundle.putString(ClasstableFragment.CLASSTABLE_JSON, classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, ""));
             bundle.putString(ClasstableFragment.CLASSTABLE_ADDITIONAL_JSON, classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, ""));

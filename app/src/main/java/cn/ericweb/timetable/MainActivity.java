@@ -24,6 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import cn.ericweb.timetable.util.AppConstant;
 
@@ -167,14 +171,24 @@ public class MainActivity extends AppCompatActivity {
 
         // 设置weekShowwing 为 当前周
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        weekShowwing = sharedPref.getInt(getString(R.string.setting_classtable_now_week_key), 1);
+        Calendar now = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
+        Date startDate;
+        try {
+            startDate = yyyymmdd.parse(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.setting_classtable_now_week_first_week_start_date_key), ""));
+        } catch (ParseException e) {
+            startDate = new Date();
+        }
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(startDate);
+        long temp = (now.getTimeInMillis() - startCalendar.getTimeInMillis()) / (7 * 1000 * 24 * 60 * 60) + 1;
+        weekShowwing = (int) temp;
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         showTables(weekShowwing);
-//        refreshClasstableCache();
     }
 
     /**
@@ -213,25 +227,6 @@ public class MainActivity extends AppCompatActivity {
         ClasstableFragment classtableFragment = new ClasstableFragment();
         classtableFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.classtable_container_new, classtableFragment).commit();
-    }
-
-    /**
-     * 刷新课程表截图
-     */
-    void refreshClasstableCache() {
-        RelativeLayout container = (RelativeLayout) findViewById(R.id.classtable_container);
-        Bitmap bitmap = Bitmap.createBitmap(container.getWidth(), container.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        container.draw(canvas);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] bitmapByte = baos.toByteArray();
-        String imageString = new String(Base64.encodeToString(bitmapByte, Base64.DEFAULT));
-
-        SharedPreferences classtableSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, MODE_PRIVATE);
-        SharedPreferences.Editor editor = classtableSharedPref.edit();
-        editor.putString(AppConstant.CLASSTABLE_KEY_CACHE, imageString);
-        editor.commit();
     }
 
     /**

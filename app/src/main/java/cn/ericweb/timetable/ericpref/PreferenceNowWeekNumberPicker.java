@@ -15,8 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import cn.ericweb.timetable.R;
 
@@ -46,6 +48,7 @@ public class PreferenceNowWeekNumberPicker extends DialogPreference {
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     protected void onDialogClosed(boolean positiveResult) {
         persistInt(mCurrentValue);
 
@@ -57,7 +60,7 @@ public class PreferenceNowWeekNumberPicker extends DialogPreference {
         int day2FirstWeek = (mCurrentValue - 1) * 7;
         calendar.add(Calendar.DATE, -(day2Monday + day2FirstWeek));
         @SuppressLint("SimpleDateFormat") SimpleDateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
-        getSharedPreferences().edit().putString(getContext().getString(R.string.setting_classtable_now_week_first_week_start_date_key, ""), yyyymmdd.format(calendar.getTime())).commit();
+        getSharedPreferences().edit().putString(getContext().getString(R.string.setting_classtable_now_week_first_week_start_date_key), yyyymmdd.format(calendar.getTime())).commit();
     }
 
     @Override
@@ -69,10 +72,27 @@ public class PreferenceNowWeekNumberPicker extends DialogPreference {
         return view;
     }
 
+    @SuppressLint("StringFormatInvalid")
     @Override
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
         NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+
+        Calendar now = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
+        Date startDate;
+        try {
+            startDate = yyyymmdd.parse(getSharedPreferences().getString(getContext().getString(R.string.setting_classtable_now_week_first_week_start_date_key, ""), ""));
+        } catch (ParseException e) {
+            startDate = new Date();
+        }
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(startDate);
+
+        long temp = (now.getTimeInMillis() - startCalendar.getTimeInMillis()) / (7 * 1000 * 24 * 60 * 60) + 1;
+
+        mCurrentValue = (int) temp;
+
         numberPicker.setValue(mCurrentValue);
     }
 
