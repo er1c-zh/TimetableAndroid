@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import cn.ericweb.timetable.util.RefreshWidget;
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -26,5 +28,11 @@ public class SettingsActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.settings_container, new SettingsFragment())
                 .commit();
+    }
+
+    @Override
+    protected void onResume() {
+        // 刷新widget
+        RefreshWidget.updateWidgetClasstable(this);
     }
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -41,6 +42,7 @@ import static cn.ericweb.timetable.ClasstableFragment.WEEK_TO_SHOW;
  */
 public class ClasstableWidget extends AppWidgetProvider {
 
+    public static String WIDGET_CLASSTABLE_KEY_IDS = "cn.ericweb.widget.classtable.ids";
     public static int FONT_SCALE = 450;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
@@ -343,6 +345,15 @@ public class ClasstableWidget extends AppWidgetProvider {
         }
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.hasExtra(WIDGET_CLASSTABLE_KEY_IDS)) {
+            int[] ids = intent.getExtras().getIntArray(WIDGET_CLASSTABLE_KEY_IDS);
+            onUpdate(context, AppWidgetManager.getInstance(context), ids);
+        } else {
+            super.onReceive(context, intent);
+        }
+    }
 
     @Override
     public void onEnabled(Context context) {

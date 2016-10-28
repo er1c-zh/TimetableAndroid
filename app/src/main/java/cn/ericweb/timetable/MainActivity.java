@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import cn.ericweb.timetable.util.AppConstant;
+import cn.ericweb.timetable.util.RefreshWidget;
 
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("CommitPrefEdits")
@@ -183,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
         startCalendar.setTime(startDate);
         long temp = (now.getTimeInMillis() - startCalendar.getTimeInMillis()) / (7 * 1000 * 24 * 60 * 60) + 1;
         weekShowwing = (int) temp;
+
+        // 刷新widget
+        RefreshWidget.updateWidgetClasstable(this);
     }
 
     @Override
