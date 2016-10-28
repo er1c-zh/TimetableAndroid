@@ -32,6 +32,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
+
         // 刷新widget
         RefreshWidget.updateWidgetClasstable(this);
     }

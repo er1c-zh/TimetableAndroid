@@ -109,18 +109,21 @@ public class PreferenceColorPickerWithAlpha extends DialogPreference {
 
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        if (restorePersistedValue) {
+        if (restorePersistedValue || ((String) defaultValue).isEmpty()) {
             // Restore existing state
             mCurrentColor = this.getPersistedInt(DEFAULT_COLOR);
         } else {
             // Set default state from the XML attribute
-            mCurrentColor = (Integer) defaultValue;
+
+//            String tempRecord = "#" + defaultValue;
+            mCurrentColor = Color.parseColor((String) defaultValue);
             persistInt(mCurrentColor);
         }
     }
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInteger(index, DEFAULT_COLOR);
+//        return a.getInteger(index, DEFAULT_COLOR);
+        return a.getString(index);
     }
 }

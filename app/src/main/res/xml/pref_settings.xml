@@ -17,12 +17,13 @@
         android:key="pref_key_widget_settings"
         android:title="@string/setting_classtable_widget_title">
         <cn.ericweb.timetable.ericpref.PreferenceColorPickerWithAlpha
-            android:defaultValue="000000"
+            android:defaultValue="#ffffffff"
             android:key="@string/setting_classtable_widget_text_color_key"
             android:summary="@string/setting_classtable_widget_text_color_summary"
             android:title="@string/setting_classtable_widget_text_color_title" />
 
         <cn.ericweb.timetable.ericpref.PreferenceColorPickerWithAlpha
+            android:defaultValue="#88000000"
             android:key="@string/setting_classtable_widget_background_color_key"
             android:summary="@string/setting_classtable_widget_background_color_summary"
             android:title="@string/setting_classtable_widget_background_color_title" />
