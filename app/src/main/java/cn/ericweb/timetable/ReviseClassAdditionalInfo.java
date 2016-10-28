@@ -1,33 +1,25 @@
 package cn.ericweb.timetable;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.Layout;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.NumberPicker;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import cn.ericweb.timetable.domain.ClassTableAppAdditionalInfo;
-import cn.ericweb.timetable.domain.Course;
 import cn.ericweb.timetable.domain.CourseAppAdditionalInfo;
 import cn.ericweb.timetable.util.AppConstant;
 
@@ -128,57 +120,50 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
     public void reviseColor(final View view) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         View colorPicker = LayoutInflater.from(this).inflate(R.layout.dialog_color_picker, null);
+        final SeekBar red = (SeekBar) colorPicker.findViewById(R.id.seekBarRed);
+        final SeekBar green = (SeekBar) colorPicker.findViewById(R.id.seekBarGreen);
+        final SeekBar blue = (SeekBar) colorPicker.findViewById(R.id.seekBarBlue);
 
-        // 初始化选择器
-        final TextView canvas = (TextView) colorPicker.findViewById(R.id.canvas);
-        final EditText r = (EditText) colorPicker.findViewById(R.id.red);
-        final EditText g = (EditText) colorPicker.findViewById(R.id.green);
-        final EditText b = (EditText) colorPicker.findViewById(R.id.blue);
+        final TextView canvas = (TextView) colorPicker.findViewById(R.id.color_info);
 
-        int color = ((ColorDrawable) findViewById(R.id.new_background_color).getBackground()).getColor();
-        canvas.setBackgroundColor(color);
+        final TextView newBackgroundColor = (TextView) findViewById(R.id.new_background_color);
 
-        TextWatcher colorParamsChanged = new TextWatcher() {
+        canvas.setBackgroundColor(additionalInfo.getColor());
+        red.setProgress(Color.red(additionalInfo.getColor()));
+        green.setProgress(Color.green(additionalInfo.getColor()));
+        blue.setProgress(Color.blue(additionalInfo.getColor()));
+
+        dialogBuilder.setView(colorPicker);
+
+        SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                canvas.setBackgroundColor(Color.rgb(red.getProgress(), green.getProgress(), blue.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    int red = Integer.parseInt(String.valueOf(r.getText()));
-                    int green = Integer.parseInt(String.valueOf(g.getText()));
-                    int blue = Integer.parseInt(String.valueOf(b.getText()));
-                    int newColor = Color.rgb(red, green, blue);
-                    canvas.setBackgroundColor(newColor);
-                } catch (Exception e) {
-                    return;
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
         };
-        r.setText(Color.red(color) + "");
-        r.addTextChangedListener(colorParamsChanged);
-        g.setText(Color.green(color) + "");
-        g.addTextChangedListener(colorParamsChanged);
-        b.setText(Color.blue(color) + "");
-        b.addTextChangedListener(colorParamsChanged);
 
-
-        dialogBuilder.setView(colorPicker);
+        red.setOnSeekBarChangeListener(listener);
+        green.setOnSeekBarChangeListener(listener);
+        blue.setOnSeekBarChangeListener(listener);
 
         dialogBuilder.setPositiveButton(getString(R.string.revise_class_additional_info_confirm), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int color = ((ColorDrawable) canvas.getBackground()).getColor();
-                view.setBackgroundColor(color);
+                newBackgroundColor.setBackgroundColor(color);
             }
         });
+        dialogBuilder.setTitle(R.string.revise_class_additional_info_class_background_color_id);
         AlertDialog productDialog = dialogBuilder.create();
         productDialog.setCanceledOnTouchOutside(true);
         productDialog.show();

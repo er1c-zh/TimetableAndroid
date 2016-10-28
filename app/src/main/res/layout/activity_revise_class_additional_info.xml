@@ -42,8 +42,10 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/background_color_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="reviseColor"
                 android:orientation="horizontal"
                 android:padding="@dimen/padding_left_or_right">
 
@@ -62,8 +64,7 @@
                     android:id="@+id/new_background_color"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:onClick="reviseColor"
-                    android:paddingRight="@dimen/padding_left_or_right"/>
+                    android:paddingRight="@dimen/padding_left_or_right" />
 
             </LinearLayout>
         </LinearLayout>
