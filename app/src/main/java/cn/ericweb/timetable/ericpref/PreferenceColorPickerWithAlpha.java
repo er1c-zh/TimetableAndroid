@@ -22,6 +22,7 @@ import cn.ericweb.timetable.R;
 public class PreferenceColorPickerWithAlpha extends DialogPreference {
     static int DEFAULT_COLOR = Color.WHITE;
     int mCurrentColor;
+
     public PreferenceColorPickerWithAlpha(Context context, AttributeSet attrs) {
         super(context, attrs);
 

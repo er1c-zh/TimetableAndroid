@@ -3,7 +3,6 @@ package cn.ericweb.timetable.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.sql.Time;
 import java.util.Calendar;
 import java.util.LinkedList;
 
@@ -30,11 +29,10 @@ public class Classtable implements Serializable {
         this.sessionStartDate = Calendar.getInstance().getTime();
         this.numberOfClassPerDay = _numberOfClassPerDay;
 
-        this.classStartTime = new Time(_startHour, _startMin, 0);
+        this.classStartTime = new Time(_startHour, _startMin);
         this.minutesPerClass = _minsPerClass;
         this.intervals = _intervals;
     }
-
     public void pushActivities(Activity newActivity) {
         this.activities.add(newActivity);
     }
@@ -44,11 +42,10 @@ public class Classtable implements Serializable {
     }
 
     public void pushSubject(Subject _subject) {
-        if (this.subjects.indexOf(_subject) == -1) {
+        if(this.subjects.indexOf(_subject) == -1) {
             this.subjects.add(_subject);
         }
     }
-
     public void setSubjects(LinkedList<Subject> subjects) {
         this.subjects = subjects;
     }
@@ -105,39 +102,39 @@ public class Classtable implements Serializable {
      * 用于合并连在一起的相同的课程/activities
      */
     public void fixClasses() {
-        for (Subject subject : this.subjects) {
+        for(Subject subject : this.subjects) {
             LinkedList<Activity> tmpActLL = new LinkedList<Activity>();
-            for (Activity activity : this.activities) {
-                if (activity.isClass() && activity.getSubject().equals(subject)) {
+            for(Activity activity : this.activities) {
+                if(activity.isClass() && activity.getSubject().equals(subject)) {
                     tmpActLL.add(activity);
                 }
             }
 
-            for (Activity activity : tmpActLL) {
+            for(Activity activity : tmpActLL) {
                 this.activities.remove(activity);
             }
 
 
-            for (int i = 0; i < tmpActLL.size(); i++) {
-                int weekday = tmpActLL.get(i).getWhichWeekday();
-                int start = tmpActLL.get(i).getStartClassIndex();
-                int end = tmpActLL.get(i).getEndClassIndex();
+            for(int i = 0; i < tmpActLL.size(); i++) {
+               int weekday = tmpActLL.get(i).getWhichWeekday();
+               int start = tmpActLL.get(i).getStartClassIndex();
+               int end = tmpActLL.get(i).getEndClassIndex();
 
-                for (int j = i + 1; j < tmpActLL.size(); j++) {
-                    int _weekday = tmpActLL.get(j).getWhichWeekday();
-                    int _start = tmpActLL.get(j).getStartClassIndex();
-                    int _end = tmpActLL.get(j).getEndClassIndex();
-                    if (_weekday == weekday && (Math.abs(_start - end) == 1 || Math.abs(_end - start) == 1)) {
-                        int min = Math.min(_start, start);
-                        int max = Math.max(_end, end);
-                        start = min;
-                        end = max;
-                        tmpActLL.get(i).setStartClassIndex(min);
-                        tmpActLL.get(i).setEndClassIndex(max);
-                        tmpActLL.remove(j);
-                        j = j - 1;
-                    }
-                }
+               for(int j = i + 1; j < tmpActLL.size(); j++) {
+                   int _weekday = tmpActLL.get(j).getWhichWeekday();
+                   int _start = tmpActLL.get(j).getStartClassIndex();
+                   int _end = tmpActLL.get(j).getEndClassIndex();
+                   if(_weekday == weekday && (Math.abs(_start - end) == 1 || Math.abs(_end - start) == 1)) {
+                       int min = Math.min(_start, start);
+                       int max = Math.max(_end, end);
+                       start = min;
+                       end = max;
+                       tmpActLL.get(i).setStartClassIndex(min);
+                       tmpActLL.get(i).setEndClassIndex(max);
+                       tmpActLL.remove(j);
+                       j = j - 1;
+                   }
+               }
             }
 
             this.activities.addAll(tmpActLL);

@@ -1,4 +1,4 @@
-package cn.ericweb.timetable.util;
+package cn.ericweb.timetable.utils;
 
 /**
  * 关于客户端请求设置的一些常量
@@ -21,10 +21,11 @@ public class AppConstant {
     public static final String WIDGET_KEY_HEIGHT = "cn.ericweb.WIDGET_HEIGHT";
 
     // 查询课程表的表单
-    public static final String CLASSTABLE_ID = "schoolId";
+    public static final String CLASSTABLE_ID = "id";
     public static final String CLASSTABLE_PASSWORD = "pwd";
-    public static final String CLASSTABLE_YEAR = "year";
-    public static final String CLASSTABLE_SESSION = "session";
+    public static final String CLASSTABLE_CHECKCODE = "checkcode";
+    public static final String CLASSTABLE_YEAR = "startYear";
+    public static final String CLASSTABLE_SESSION = "indexSemester";
 
     // 机器的环境
     public static final String PHONE_DENSITY_DPI = "cn.ericweb.PHONE_DENSITY_DPI";

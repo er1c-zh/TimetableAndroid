@@ -1,68 +1,50 @@
 package cn.ericweb.timetable.domain;
 
-import java.io.Serializable;
-
-public class Teacher implements Serializable {
-
-    public Teacher() {
-        name = "";
-        email = "";
-        phoneNumber = "";
-    }
+/**
+ * 保存教师信息
+ * Created by eric on 17-2-21.
+ */
+public class Teacher {
+    private String name;
+    private String phone;
+    private String email;
 
     @Override
-    public String toString() {
-        return name;
-    }
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (null == obj) {
-            return false;
-        }
-        if (obj.getClass().equals(this.getClass())) {
-            Teacher other = (Teacher) obj;
-            return other.getEmail().equals(email) && other.getName().equals(name) && other.getPhoneNumber().equals(phoneNumber);
-        } else {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Teacher teacher = (Teacher) o;
+
+        return name != null ? name.equals(teacher.name) : teacher.name == null;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 53 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 53 * hash + (this.email != null ? this.email.hashCode() : 0);
-        hash = 53 * hash + (this.phoneNumber != null ? this.phoneNumber.hashCode() : 0);
-        return hash;
-    }
-
-    public void setName(String _name) {
-        name = _name;
+        return name != null ? name.hashCode() : 0;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setEmail(String _email) {
-        email = _email;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setPhoneNumber(String _phoneNumber) {
-        phoneNumber = _phoneNumber;
+    public void setEmail(String email) {
+        this.email = email;
     }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-    private String name;
-    private String email;
-    private String phoneNumber;
 }

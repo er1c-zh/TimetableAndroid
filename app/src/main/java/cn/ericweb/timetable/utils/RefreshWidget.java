@@ -1,4 +1,4 @@
-package cn.ericweb.timetable.util;
+package cn.ericweb.timetable.utils;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;

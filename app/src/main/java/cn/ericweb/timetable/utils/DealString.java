@@ -1,4 +1,4 @@
-package cn.ericweb.timetable.util;
+package cn.ericweb.timetable.utils;
 
 /**
  * Created by eric on 16-9-9.

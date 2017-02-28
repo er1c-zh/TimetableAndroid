@@ -5,10 +5,15 @@
     <string name="version_info_detail">新特性\n1.a simple widget\nbug\n1.虚拟按键与应用之间有一条空白\n2.华为无法在隐藏虚拟按键时重绘（估计华为自己有接口回头看看\nTODO:\n下一个就要上0.3.0a了，打算加上widget，重构有关设置Activity的方法。\n下一个beta打算添加自定义全部的颜色，背景</string>
 
     <!--首页-->
-    <string name="query_class_table_button">Query</string>
-    <string name="query_class_table_userId">StudentId</string>
-    <string name="query_class_table_pwd">pwd</string>
     <string name="title_activity_query_class_table">Query</string>
+
+    <!--查询Activity-->
+    <string name="query_class_table_title">查询</string>
+    <string name="query_class_table_button">查询</string>
+    <string name="query_class_table_userId">学号</string>
+    <string name="query_class_table_pwd">密码</string>
+    <string name="query_class_table_start_year">学年</string>
+    <string name="query_class_table_semester">学期</string>
 
     <!--settings-->
 

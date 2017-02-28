@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--链接-->
-    <string name="link_query_classtable">http://www.ericweb.cn:8080/app/classtable</string>
+    <string name="link_query_classtable">115.159.159.224:8080/timetable/json</string>
 </resources>

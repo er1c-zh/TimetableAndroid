@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="5dp"/>
+        android:elevation="5dp" />
 
     <RelativeLayout
         android:id="@+id/classtable_container"
@@ -22,6 +22,7 @@
             android:scaleType="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
         <LinearLayout
             android:id="@+id/classtable_container_new"
             android:layout_width="match_parent"

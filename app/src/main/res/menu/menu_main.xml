@@ -4,18 +4,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="cn.ericweb.timetable.MainActivity">
 
-    <item android:id="@+id/refresh_classtable"
+    <item
+        android:id="@+id/refresh_classtable"
         android:title="refresh"
         android:orderInCategory="10"
         android:icon="@drawable/ic_refresh_black_24dp"
-        app:showAsAction="ifRoom"/>
-    <item android:id="@+id/settings"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/settings"
         android:title="settings"
         android:orderInCategory="20"
         android:icon="@drawable/ic_settings_black_24dp"
-        app:showAsAction="ifRoom"/>
-    <item android:id="@+id/version_info"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/version_info"
         android:title="版本信息"
         android:orderInCategory="90"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

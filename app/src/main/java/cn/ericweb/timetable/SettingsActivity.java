@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import cn.ericweb.timetable.util.RefreshWidget;
+import cn.ericweb.timetable.utils.RefreshWidget;
 
 public class SettingsActivity extends AppCompatActivity {
 

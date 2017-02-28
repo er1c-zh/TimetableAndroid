@@ -66,7 +66,7 @@ public class EricGridClasstableSimpleAdapter extends SimpleAdapter {
         if (this.isSetHeight) {
             params.height = this.height;
         }
-        if(this.isSetWidth) {
+        if (this.isSetWidth) {
             params.width = this.width;
         }
         convertView.setLayoutParams(params);

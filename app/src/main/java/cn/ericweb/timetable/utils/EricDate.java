@@ -1,4 +1,4 @@
-package cn.ericweb.timetable.util;
+package cn.ericweb.timetable.utils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +11,7 @@ public class EricDate {
         date = new Date();
         calendar = Calendar.getInstance();
     }
+
     public Date getMondayDateOfNowWeek() {
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : calendar.get(Calendar.DAY_OF_WEEK) - 1;
         Date result = new Date();
