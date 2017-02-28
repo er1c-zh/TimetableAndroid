@@ -200,8 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 防止第一次或清空了数据
         String jsonClasstable = classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, "");
-        String jsonClasstableAdditionalInfo = classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, "");
-        if (jsonClasstable.equals("") || jsonClasstableAdditionalInfo.equals("")) {
+        if (jsonClasstable.equals("")) {
             showRefresh();
         }
         Bundle bundle = new Bundle();
