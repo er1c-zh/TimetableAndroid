@@ -207,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
         bundle.putInt(ClasstableFragment.WEEK_TO_SHOW, week2show);
         bundle.putBoolean(ClasstableFragment.IF_SHOW_WEEKENDS, config.getBoolean(getString(R.string.setting_classtable_show_weekends_key), true));
         bundle.putString(ClasstableFragment.CLASSTABLE_JSON, classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, ""));
-        bundle.putString(ClasstableFragment.CLASSTABLE_ADDITIONAL_JSON, classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, ""));
         // 获得尺寸数据
         // 宽度
         Point point = new Point();

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -61,7 +62,7 @@ public class ClasstableFragment extends Fragment {
         try {
             savedInstanceState = getArguments();
             int week2show = savedInstanceState.getInt(WEEK_TO_SHOW);
-            // get课程表和附加信息
+            // get课程表
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-ddHH:mm:ss").create();
             Classtable classTable = gson.fromJson(savedInstanceState.getString(CLASSTABLE_JSON), Classtable.class);
 
@@ -193,8 +194,15 @@ public class ClasstableFragment extends Fragment {
                     GradientDrawable classBackgroundDrawable = (GradientDrawable) getContext().getDrawable(R.drawable.classtable_class_background_radius_round_coner);
                     if (classBackgroundDrawable != null) {
                         classBackgroundDrawable.setColor(getResources().getColor(R.color.colorClassBackground));
+                        if(claxx.getColorBg() != null) {
+                            cn.ericweb.timetable.domain.Color _c = claxx.getColorBg();
+                            classBackgroundDrawable.setColor(Color.argb(_c.getR(), _c.getG(), _c.getB(), _c.getA()));
+                        }
                     }
                     classTextview.setBackground(classBackgroundDrawable);
+
+                    // 添加磁铁的点击功能
+                    classTextview.setOnClickListener(classInfoListener);
 
                     classContainer.addView(classTextview);
 
@@ -271,60 +279,70 @@ public class ClasstableFragment extends Fragment {
     View.OnClickListener classInfoListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-//            final TextView textView = (TextView) view;
-//
-//            AlertDialog.Builder classInfoDialogBuilder = new AlertDialog.Builder(textView.getContext());
-//
-//            // 获得附加信息类
-//            final Gson gson = new Gson();
-//            SharedPreferences tempSharedPref = view.getContext().getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, getContext().MODE_PRIVATE);
-//            String additionalInfoJson = tempSharedPref.getString(AppConstant.CLASSTABLE_KEY_ADDITIONAL_INFO, "");
-//            ClassTableAppAdditionalInfo additionalInfo;
-//            final CourseAppAdditionalInfo courseAppAdditionalInfo;
-//            try {
-//                additionalInfo = gson.fromJson(additionalInfoJson, ClassTableAppAdditionalInfo.class);
-//                courseAppAdditionalInfo = additionalInfo.getCourseAppAdditionalInfo((String) textView.getText());
-//            } catch (Exception e) {
-//                return;
-//            }
-//
-//            // listener
-//            DialogInterface.OnClickListener reviseAdditionalInfoListener = new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    Intent intent = new Intent(textView.getContext(), ReviseClassAdditionalInfo.class);
-//                    intent.putExtra(ReviseClassAdditionalInfo.TARGET_COURSE_ADDITIONAL_INFO, gson.toJson(courseAppAdditionalInfo));
-//                    startActivity(intent);
-//                }
-//            };
-//
-//            // 加载布局文件
-//            View content = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_class_info, null);
-//
-//            // title
-//            TextView classTitle = (TextView) content.findViewById(R.id.className);
-//            classTitle.setText(courseAppAdditionalInfo.getCourse().getCourseName());
-//
-//            // short course name
-//            TextView shortCourseName = (TextView) content.findViewById(R.id.shortClassName);
-//            shortCourseName.setText(courseAppAdditionalInfo.getShortOfCourseName());
-//
-//            // address
-//            TextView address = (TextView) content.findViewById(R.id.classAddress);
-//            address.setText(courseAppAdditionalInfo.getCourse().getAddress());
-//
-//            // teacher name
-//            TextView teacherName = (TextView) content.findViewById(R.id.classTeacher);
-//            teacherName.setText(courseAppAdditionalInfo.getCourse().getTeacher().getName());
-//
-//
-//            classInfoDialogBuilder.setView(content);
-//            // 开启修改按钮
-//            classInfoDialogBuilder.setPositiveButton(getString(R.string.dialog_class_info_revise_button), reviseAdditionalInfoListener);
-//            AlertDialog classInfoDialog = classInfoDialogBuilder.create();
-//            classInfoDialog.setCanceledOnTouchOutside(true);
-//
-//            classInfoDialog.show();
+            final TextView textView = (TextView) view;
+
+            AlertDialog.Builder classInfoDialogBuilder = new AlertDialog.Builder(textView.getContext());
+
+            // get课程表
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-ddHH:mm:ss").create();
+            SharedPreferences tempSharedPref = view.getContext().getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, getContext().MODE_PRIVATE);
+            String classtableJson = tempSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, "");
+            Classtable classtable;
+            Activity _activity = null;
+            try {
+                classtable = gson.fromJson(classtableJson, Classtable.class);
+            } catch (Exception e) {
+                return;
+            }
+
+            for(Activity _s : classtable.getActivities()) {
+                if(_s.getTitle().equals(((TextView) view).getText())) {
+                    _activity = _s;
+                    break;
+                }
+            }
+            final Activity activity = _activity;
+            if(activity == null) {
+                return;
+            }
+
+            // listener
+            DialogInterface.OnClickListener reviseAdditionalInfoListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(textView.getContext(), ReviseClassAdditionalInfo.class);
+                    intent.putExtra(ReviseClassAdditionalInfo.TARGET_SUBJECT, gson.toJson(activity.getSubject()));
+                    startActivity(intent);
+                }
+            };
+
+            // 加载布局文件
+            View content = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_class_info, null);
+
+            // title
+            TextView classTitle = (TextView) content.findViewById(R.id.className);
+            classTitle.setText(activity.getSubject().getTitle());
+
+            // short course name
+            TextView shortCourseName = (TextView) content.findViewById(R.id.shortClassName);
+            shortCourseName.setText(activity.getSubject().getShortTitle());
+
+            // address
+            TextView address = (TextView) content.findViewById(R.id.classAddress);
+            address.setText(activity.getLocation());
+
+            // teacher name
+            TextView teacherName = (TextView) content.findViewById(R.id.classTeacher);
+            teacherName.setText(activity.getSubject().getTeacher().getName());
+
+
+            classInfoDialogBuilder.setView(content);
+            // 开启修改按钮
+            classInfoDialogBuilder.setPositiveButton(getString(R.string.dialog_class_info_revise_button), reviseAdditionalInfoListener);
+            AlertDialog classInfoDialog = classInfoDialogBuilder.create();
+            classInfoDialog.setCanceledOnTouchOutside(true);
+
+            classInfoDialog.show();
         }
     };
 }

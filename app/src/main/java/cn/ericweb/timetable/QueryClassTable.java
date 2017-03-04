@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import cn.ericweb.timetable.domain.*;
@@ -98,14 +99,30 @@ public class QueryClassTable extends AppCompatActivity {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-ddHH:mm:ss").create();
         try {
             Classtable _c = gson.fromJson(jsonClasstable, Classtable.class);
+
+            LinkedList<Activity> _tmpList = new LinkedList<>();
+            for(Activity _claxx : _c.getActivities()) {
+                if(_claxx.getColorBg() == null) {
+                    int index = _c.getActivities().indexOf(_claxx);
+
+                    int _colorInt = getResources().getColor(R.color.colorClassBackground);
+                    int red = (_colorInt & 0xff0000) >> 16;
+                    int green = (_colorInt & 0x00ff00) >> 8;
+                    int blue = (_colorInt & 0x0000ff);
+                    _claxx.setColorBg(new Color(red, green, blue, 255));
+                }
+                _tmpList.add(_claxx);
+            }
+            _c.setActivities(_tmpList);
+            SharedPreferences sharedPref = this.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(AppConstant.CLASSTABLE_KEY_MAIN, gson.toJson(_c));
+            editor.commit();
         } catch (Exception e) {
-            queryStatus.setText(jsonClasstable);
+            queryStatus.setText(e.getMessage());
             return false;
         }
-        SharedPreferences sharedPref = this.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(AppConstant.CLASSTABLE_KEY_MAIN, jsonClasstable);
-        editor.commit();
+
         return true;
     }
 
@@ -157,7 +174,6 @@ public class QueryClassTable extends AppCompatActivity {
                     showErrorInfo(result.content);
                 } else {
                     if (setClasstableAndAdditionalInfo2SharedPreference(result.content)) {
-//                        startActivity(intent2Main);
                         finish();
                     }
                 }
