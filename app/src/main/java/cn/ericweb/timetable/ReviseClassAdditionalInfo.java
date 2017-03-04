@@ -1,15 +1,19 @@
 package cn.ericweb.timetable;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -18,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import java.util.LinkedList;
 
 import cn.ericweb.timetable.domain.Activity;
+import cn.ericweb.timetable.domain.Class;
 import cn.ericweb.timetable.domain.Classtable;
 import cn.ericweb.timetable.domain.Color;
 import cn.ericweb.timetable.domain.Subject;
@@ -92,7 +97,7 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
         this.newSubject = this.oldSubject;
         // 修改缩写
         EditText newShortName = (EditText) findViewById(R.id.new_short_course_name);
-        this.oldSubject.setShortTitle(newShortName.getText().toString());
+        this.newSubject.setShortTitle(newShortName.getText().toString());
 
         // 更新背景颜色
         TextView newBackgroundColor = (TextView) findViewById(R.id.new_background_color);
@@ -103,20 +108,22 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
         int blue = (_color & 0x0000ff);
         int alpha = _colorTmp.getAlpha();
 
-        this.classtable.getSubjects().add(this.classtable.getSubjects().indexOf(this.oldSubject), this.newSubject);
+        LinkedList<Subject> _subjectList = this.classtable.getSubjects();
+        _subjectList.add(this.classtable.getSubjects().indexOf(this.oldSubject), this.newSubject);
+        this.classtable.setSubjects(_subjectList);
 
         LinkedList<Activity> _tmpList = new LinkedList<>();
         for(Activity _a : this.classtable.getActivities()) {
             if (_a.getSubject().equals(this.oldSubject)) {
                 _a.setSubject(this.newSubject);
+                Class _tmpClass = new Class(this.newSubject);
+                _tmpClass.setLocation(_a.getLocation());
+                _a.setTitle(_tmpClass.subject2Title());
                 _a.setColorBg(new Color(red, green, blue, alpha));
             }
             _tmpList.add(_a);
         }
         this.classtable.setActivities(_tmpList);
-//        additionalInfo.setColor(((ColorDrawable) newBackgroundColor.getBackground()).getColor());
-        // 更新container
-//        classTableAppAdditionalInfo.replaceCourseAppAdditionalInfo(additionalInfo);
 
         // 更新SharedPref
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-ddHH:mm:ss").create();
@@ -132,65 +139,87 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
         shortName.setText(this.oldSubject.getShortTitle());
 
         // 课程磁贴的颜色
-//        TextView classBackgroundColor = (TextView) findViewById(R.id.new_background_color);
-//        if (this..getColor() == -1) {
-//            classBackgroundColor.setBackgroundColor(getResources().getColor(R.color.colorClassBackground));
-//        } else {
-//            classBackgroundColor.setBackgroundColor(additionalInfo.getColor());
-//        }
+        TextView classBackgroundColor = (TextView) findViewById(R.id.new_background_color);
+        Activity _tmpActivity = null;
+        for(Activity _a : this.classtable.getActivities()) {
+            if(_a.getSubject().equals(this.oldSubject)) {
+                _tmpActivity = _a;
+                break;
+            }
+        }
+        if (_tmpActivity == null || _tmpActivity.getColorBg() == null) {
+            classBackgroundColor.setBackgroundColor(getResources().getColor(R.color.colorClassBackground));
+        } else {
+            Color _c = _tmpActivity.getColorBg();
+            classBackgroundColor.setBackgroundColor(android.graphics.Color.rgb(_c.getR(), _c.getG(), _c.getB()));
+        }
     }
 
     public void reviseColor(final View view) {
-//        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-//        View colorPicker = LayoutInflater.from(this).inflate(R.layout.dialog_color_picker, null);
-//        final SeekBar red = (SeekBar) colorPicker.findViewById(R.id.seekBarRed);
-//        final SeekBar green = (SeekBar) colorPicker.findViewById(R.id.seekBarGreen);
-//        final SeekBar blue = (SeekBar) colorPicker.findViewById(R.id.seekBarBlue);
-//
-//        final TextView canvas = (TextView) colorPicker.findViewById(R.id.color_info);
-//
-//        final TextView newBackgroundColor = (TextView) findViewById(R.id.new_background_color);
-//
-//        canvas.setBackgroundColor(additionalInfo.getColor());
-//        red.setProgress(Color.red(additionalInfo.getColor()));
-//        green.setProgress(Color.green(additionalInfo.getColor()));
-//        blue.setProgress(Color.blue(additionalInfo.getColor()));
-//
-//        dialogBuilder.setView(colorPicker);
-//
-//        SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                canvas.setBackgroundColor(Color.rgb(red.getProgress(), green.getProgress(), blue.getProgress()));
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//        };
-//
-//        red.setOnSeekBarChangeListener(listener);
-//        green.setOnSeekBarChangeListener(listener);
-//        blue.setOnSeekBarChangeListener(listener);
-//
-//        dialogBuilder.setPositiveButton(getString(R.string.revise_class_additional_info_confirm), new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                int color = ((ColorDrawable) canvas.getBackground()).getColor();
-//                newBackgroundColor.setBackgroundColor(color);
-//            }
-//        });
-//        dialogBuilder.setTitle(R.string.revise_class_additional_info_class_background_color_id);
-//        AlertDialog productDialog = dialogBuilder.create();
-//        productDialog.setCanceledOnTouchOutside(true);
-//        productDialog.show();
-    }
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        View colorPicker = LayoutInflater.from(this).inflate(R.layout.dialog_color_picker, null);
+        final SeekBar red = (SeekBar) colorPicker.findViewById(R.id.seekBarRed);
+        final SeekBar green = (SeekBar) colorPicker.findViewById(R.id.seekBarGreen);
+        final SeekBar blue = (SeekBar) colorPicker.findViewById(R.id.seekBarBlue);
 
-//    private CourseAppAdditionalInfo additionalInfo;
+        final TextView canvas = (TextView) colorPicker.findViewById(R.id.color_info);
+
+        final TextView newBackgroundColor = (TextView) findViewById(R.id.new_background_color);
+
+
+        Activity _tmpActivity = null;
+        for(Activity _a : this.classtable.getActivities()) {
+            if(_a.getSubject().equals(this.oldSubject)) {
+                _tmpActivity = _a;
+                break;
+            }
+        }
+
+        int _color = -1;
+        if (_tmpActivity == null || _tmpActivity.getColorBg() == null) {
+            _color = getResources().getColor(R.color.colorClassBackground);
+        } else {
+            Color _c = _tmpActivity.getColorBg();
+            _color = android.graphics.Color.rgb(_c.getR(), _c.getG(), _c.getB());
+        }
+        canvas.setBackgroundColor(_color);
+        red.setProgress(android.graphics.Color.red(_color));
+        green.setProgress(android.graphics.Color.green(_color));
+        blue.setProgress(android.graphics.Color.blue(_color));
+
+        dialogBuilder.setView(colorPicker);
+
+        SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                canvas.setBackgroundColor(android.graphics.Color.rgb(red.getProgress(), green.getProgress(), blue.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
+
+        red.setOnSeekBarChangeListener(listener);
+        green.setOnSeekBarChangeListener(listener);
+        blue.setOnSeekBarChangeListener(listener);
+
+        dialogBuilder.setPositiveButton(getString(R.string.revise_class_additional_info_confirm), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int color = ((ColorDrawable) canvas.getBackground()).getColor();
+                newBackgroundColor.setBackgroundColor(color);
+            }
+        });
+        dialogBuilder.setTitle(R.string.revise_class_additional_info_class_background_color_id);
+        AlertDialog productDialog = dialogBuilder.create();
+        productDialog.setCanceledOnTouchOutside(true);
+        productDialog.show();
+    }
 }
