@@ -131,7 +131,6 @@ public class ClasstableFragment extends Fragment {
                 weekDayFrameLayout.addView(weekDayTextView);
                 weekdayBar.addView(weekDayFrameLayout);
             }
-            int tmp = 0;
             classTableContainer.addView(weekdayBar);
 
             // 添加课程表
@@ -196,7 +195,7 @@ public class ClasstableFragment extends Fragment {
                         classBackgroundDrawable.setColor(getResources().getColor(R.color.colorClassBackground));
                         if(claxx.getColorBg() != null) {
                             cn.ericweb.timetable.domain.Color _c = claxx.getColorBg();
-                            classBackgroundDrawable.setColor(Color.argb(_c.getR(), _c.getG(), _c.getB(), _c.getA()));
+                            classBackgroundDrawable.setColor(Color.argb(_c.getA(), _c.getR(), _c.getG(), _c.getB()));
                         }
                     }
                     classTextview.setBackground(classBackgroundDrawable);
@@ -210,65 +209,7 @@ public class ClasstableFragment extends Fragment {
                 }
             }
             classTableContainer.addView(classTableRow);
-//
-//            // 添加课程
-//            for (int day = 0; day < dayToShow; day++) {
-//                // 循环每天
-//                LinearLayout dayContainer = new LinearLayout(getContext());
-//                dayContainer.setOrientation(LinearLayout.VERTICAL);
-//                for (int classIndex = 0; classIndex < classTable.getCourseNumberPerDay(); classIndex++) {
-//                    // 循环每个周
-//                    // 构建盛放每个class的布局
-//                    FrameLayout classFrameLayout = new FrameLayout(getContext());
-//                    // 获得最初的CourseInClassTable
-//                    CourseInClassTable originCourse = classTable.getCourseInClassTable(day, classIndex);
-//                    // 获得附加信息
-//                    CourseAppAdditionalInfo originCourseAdditionalInfo = classTableAppAdditionalInfo.getCourseAppAdditionalInfo(originCourse.getCourse());
-//                    // 合并同一节课
-//                    for (int isCourseEqualIndex = classIndex + 1; true; isCourseEqualIndex++) {
-//                        if (!classTable.getCourseInClassTable(day, isCourseEqualIndex).equals(originCourse) || isCourseEqualIndex >= classTable.getCourseNumberPerDay()) {
-//                            classFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(perClassWidth, perClassHeight * (isCourseEqualIndex - classIndex), 0));
-//                            classIndex = isCourseEqualIndex - 1;
-//                            break;
-//                        }
-//                    }
-//                    // 创建展示的TextView
-//                    EricRoundedCornerTextview classText = new EricRoundedCornerTextview(getContext());
-//                    classText.setBorderWidth(1);
-//                    classText.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
-//                    classText.setGravity(Gravity.CENTER);
-//
-//                    // 附加的信息不为null 课程不为空 本周有课
-//                    if (originCourseAdditionalInfo == null || originCourse.toString().equals("") || !originCourse.isCourseExistInWeek(week2show)) {
-//                        classText.setText("");
-//                    } else {
-//                        classText.setText(originCourseAdditionalInfo.getString2Show());
-//
-////                        GradientDrawable classBackgroundDrawable = (GradientDrawable) getContext().getDrawable(R.drawable.classtable_class_background_radius_round_coner);
-////                        if (classBackgroundDrawable != null) {
-////                            if (originCourseAdditionalInfo.getColor() != -1) {
-////                                classBackgroundDrawable.setColor(originCourseAdditionalInfo.getColor());
-////                            } else {
-////                                classBackgroundDrawable.setColor(getResources().getColor(R.color.colorClassBackground));
-////                            }
-////                        }
-////
-////                        classFrameLayout.setBackground(classBackgroundDrawable);
-//
-//                        if (originCourseAdditionalInfo.getColor() != -1) {
-//                            classText.setmBgColor(originCourseAdditionalInfo.getColor());
-//                        }
-//                        classText.setOnClickListener(classInfoListener);
-//                    }
-//
-//                    classFrameLayout.addView(classText);
-//                    dayContainer.addView(classFrameLayout);
-//                }
-//                classTableRow.addView(dayContainer);
-//            }
-//            classTableContainer.addView(classTableRow);
-//
-//
+
             // Inflate the layout for this fragment
             return classTableContainer;
         } catch (Exception e) {

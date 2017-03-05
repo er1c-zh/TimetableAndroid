@@ -27,6 +27,7 @@ import cn.ericweb.timetable.domain.Classtable;
 import cn.ericweb.timetable.domain.Color;
 import cn.ericweb.timetable.domain.Subject;
 import cn.ericweb.timetable.utils.AppConstant;
+import cn.ericweb.timetable.utils.RefreshWidget;
 
 public class ReviseClassAdditionalInfo extends AppCompatActivity {
 
@@ -131,6 +132,9 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(AppConstant.CLASSTABLE_KEY_MAIN, gson.toJson(this.classtable));
         editor.commit();
+
+        // 更新widget
+        RefreshWidget.updateWidgetClasstable(getApplicationContext());
     }
 
     private void initDefaultValue() {

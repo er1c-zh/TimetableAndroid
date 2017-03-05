@@ -13,11 +13,13 @@ import cn.ericweb.timetable.ClasstableWidget;
 
 public class RefreshWidget {
     public static void updateWidgetClasstable(Context context) {
-        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-        int[] ids = widgetManager.getAppWidgetIds(new ComponentName(context, ClasstableWidget.class));
-        Intent intent = new Intent();
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intent.putExtra(ClasstableWidget.WIDGET_CLASSTABLE_KEY_IDS, ids);
+//        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+//        int[] ids = widgetManager.getAppWidgetIds(new ComponentName(context, ClasstableWidget.class));
+//        Intent intent = new Intent();
+//        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+//        intent.putExtra(ClasstableWidget.WIDGET_CLASSTABLE_KEY_IDS, ids);
+
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
         context.sendBroadcast(intent);
     }

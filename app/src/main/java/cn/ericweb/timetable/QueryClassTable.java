@@ -53,18 +53,17 @@ public class QueryClassTable extends AppCompatActivity {
         // 初始化指向main的intent
         intent2Main = new Intent(this, cn.ericweb.timetable.MainActivity.class);
 
-        SharedPreferences sharedPref = getSharedPreferences("CLASS_TABLE", Context.MODE_PRIVATE);
-        TextView temp = (TextView) findViewById(R.id.classtable_status);
-        if (sharedPref.contains("classtable")) {
-            temp.setText("exist");
-        } else {
-            temp.setText("none");
-        }
-
         //初始化查询状态的View的指向
         queryStatus = (TextView) findViewById(R.id.query_status);
 
         this.queryInfo = new QueryInfo();
+
+        // 初始化默认的学年学期
+        TextView yearTextview = (TextView) findViewById(R.id.query_year_textview);
+        TextView semesterTextview = (TextView) findViewById(R.id.query_semester_textview);
+        int _semester;
+        int _year;
+
     }
 
     public void queryClassTable(View button) {
@@ -103,8 +102,6 @@ public class QueryClassTable extends AppCompatActivity {
             LinkedList<Activity> _tmpList = new LinkedList<>();
             for(Activity _claxx : _c.getActivities()) {
                 if(_claxx.getColorBg() == null) {
-                    int index = _c.getActivities().indexOf(_claxx);
-
                     int _colorInt = getResources().getColor(R.color.colorClassBackground);
                     int red = (_colorInt & 0xff0000) >> 16;
                     int green = (_colorInt & 0x00ff00) >> 8;
@@ -114,6 +111,7 @@ public class QueryClassTable extends AppCompatActivity {
                 _tmpList.add(_claxx);
             }
             _c.setActivities(_tmpList);
+
             SharedPreferences sharedPref = this.getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(AppConstant.CLASSTABLE_KEY_MAIN, gson.toJson(_c));
@@ -133,7 +131,6 @@ public class QueryClassTable extends AppCompatActivity {
     /**
      * the Key of Intent to pass input's value
      */
-    public final static String EXTRA_MESSAGE = "com.ericweb.timetable.MESSAGE";
     public TextView queryStatus;
 
     class Query extends AsyncTask<QueryInfo, Void, String> {
@@ -141,7 +138,6 @@ public class QueryClassTable extends AppCompatActivity {
         protected String doInBackground(QueryInfo[] queryInfos) {
             try {
                 QueryInfo queryInfo = queryInfos[0];
-
 
                 URL url = new URL("http://115.159.159.224:8080/timetable/json?" + AppConstant.CLASSTABLE_ID + "=" + queryInfo.getId() + "&" + AppConstant.CLASSTABLE_PASSWORD + "=" + queryInfo.getPwd() + "&" + AppConstant.CLASSTABLE_CHECKCODE + "=" + queryInfo.getCheckcode() + "&" + AppConstant.CLASSTABLE_YEAR + "=2016&" + AppConstant.CLASSTABLE_SESSION + "=2");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -171,7 +167,14 @@ public class QueryClassTable extends AppCompatActivity {
             try {
                 result = gson.fromJson(queryResultJson, ResponseBean.class);
                 if (result.sc == ResponseBean.SC_FAIL) {
-                    showErrorInfo(result.content);
+                    String errorInfo = "";
+                    try {
+                        QueryLoginResult qlr = gson.fromJson(result.content, QueryLoginResult.class);
+                        errorInfo = qlr.getInfo();
+                    } catch (Exception e) {
+                        errorInfo = "unknown error";
+                    }
+                    showErrorInfo(errorInfo);
                 } else {
                     if (setClasstableAndAdditionalInfo2SharedPreference(result.content)) {
                         finish();

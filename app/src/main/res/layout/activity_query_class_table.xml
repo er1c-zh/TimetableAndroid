@@ -40,12 +40,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
+                android:id="@+id/query_year_button"
                 android:hint="@string/query_class_table_start_year"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_width="0px" />
+            <TextView
+                android:id="@+id/query_year_textview"
+                android:layout_weight="1"
+                android:layout_width="0px"
+                android:layout_height="wrap_content" />
             <Button
+                android:id="@+id/query_semester_button"
                 android:hint="@string/query_class_table_semester"
+                android:layout_weight="1"
+                android:layout_width="0px"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/query_semester_textview"
                 android:layout_weight="1"
                 android:layout_width="0px"
                 android:layout_height="wrap_content" />
@@ -65,29 +77,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="20dp"
-                android:text="本地数据的状态" />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/classtable_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </ScrollView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="20dp"
-                android:text="查询状态" />
+                android:text="@string/query_class_table_query_stat_title" />
 
             <TextView
                 android:id="@+id/query_status"
