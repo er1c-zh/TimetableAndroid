@@ -139,7 +139,8 @@ public class QueryClassTable extends AppCompatActivity {
             try {
                 QueryInfo queryInfo = queryInfos[0];
 
-                URL url = new URL("http://115.159.159.224:8080/timetable/json?" + AppConstant.CLASSTABLE_ID + "=" + queryInfo.getId() + "&" + AppConstant.CLASSTABLE_PASSWORD + "=" + queryInfo.getPwd() + "&" + AppConstant.CLASSTABLE_CHECKCODE + "=" + queryInfo.getCheckcode() + "&" + AppConstant.CLASSTABLE_YEAR + "=2016&" + AppConstant.CLASSTABLE_SESSION + "=2");
+                URL url = new URL("http://123.207.161.188:8080/timetable/json?" + AppConstant.CLASSTABLE_ID + "=" + queryInfo.getId() + "&" + AppConstant.CLASSTABLE_PASSWORD + "=" + queryInfo.getPwd() + "&" + AppConstant.CLASSTABLE_CHECKCODE + "=" + queryInfo.getCheckcode() + "&" + AppConstant.CLASSTABLE_YEAR + "=2016&" + AppConstant.CLASSTABLE_SESSION + "=2");
+
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("charset", "utf-8");
