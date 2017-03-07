@@ -8,4 +8,22 @@
     <color name="colorApparent">#00000000</color>
 
     <color name="colorApparentWhite">#64ffffff</color>
+
+    <color name="colorClasstableBg1">#00FFFF</color>
+    <color name="colorClasstableBg2">#5F9EA0</color>
+    <color name="colorClasstableBg3">#B8860B</color>
+    <color name="colorClasstableBg4">#6495ED</color>
+    <color name="colorClasstableBg5">#FFD700</color>
+    <color name="colorClasstableBg6">#F08080</color>
+    <color name="colorClasstableBg7">#87CEFA</color>
+    <color name="colorClasstableBg8">#7B68EE</color>
+    <color name="colorClasstableBg9">#C71585</color>
+    <color name="colorClasstableBg10">#FF4500</color>
+    <color name="colorClasstableBg11">#F4A460</color>
+    <color name="colorClasstableBg12">#40E0D0</color>
+    <color name="colorClasstableBg13">#ADFF2F</color>
+    <color name="colorClasstableBg14">#7FFF00</color>
+    <color name="colorClasstableBg15">#B22222</color>
+    <color name="colorClasstableBg16">#1c3a9f</color>
+
 </resources>

@@ -160,7 +160,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.main_container, classtableFragment).commit();
     }
     void showSubjects() {
+        SharedPreferences classtableSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, MODE_PRIVATE);
+        String jsonClasstable = classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, "");
+        Bundle bundle = new Bundle();
+        bundle.putString(SubjectsFragment.CLASSTABLE_JSON, jsonClasstable);
         SubjectsFragment subFrag = new SubjectsFragment();
+        subFrag.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.main_container, subFrag).commit();
     }
 

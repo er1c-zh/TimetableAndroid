@@ -110,7 +110,8 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
         int alpha = _colorTmp.getAlpha();
 
         LinkedList<Subject> _subjectList = this.classtable.getSubjects();
-        _subjectList.add(this.classtable.getSubjects().indexOf(this.oldSubject), this.newSubject);
+        _subjectList.remove(this.oldSubject);
+        _subjectList.add(this.newSubject);
         this.classtable.setSubjects(_subjectList);
 
         LinkedList<Activity> _tmpList = new LinkedList<>();

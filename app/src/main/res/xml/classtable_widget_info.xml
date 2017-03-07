@@ -4,7 +4,7 @@
     android:initialLayout="@layout/classtable_widget"
     android:minHeight="250dp"
     android:minWidth="250dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/ic_logo_icon"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="43200000"
     android:widgetCategory="home_screen|keyguard" />
