@@ -48,8 +48,6 @@ import static cn.ericweb.timetable.ClasstableFragment.WEEK_TO_SHOW;
  * Implementation of App Widget functionality.
  */
 public class ClasstableWidget extends AppWidgetProvider {
-
-    public static String WIDGET_CLASSTABLE_KEY_IDS = "cn.ericweb.widget.classtable.ids";
     public static int FONT_SCALE = 450;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -94,10 +92,11 @@ public class ClasstableWidget extends AppWidgetProvider {
             bundle.putString(ClasstableFragment.CLASSTABLE_JSON, classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, ""));
 
             // 获得尺寸数据
+            float scale = context.getResources().getDisplayMetrics().density;
             // 宽度
-            int containerWidth = widgetConfig.getInt(AppConstant.WIDGET_KEY_WIDTH, 720);
+            int containerWidth = widgetConfig.getInt(AppConstant.WIDGET_KEY_WIDTH, (int) (250 * scale + 0.5f));
             // 高度
-            int containerHeight = widgetConfig.getInt(AppConstant.WIDGET_KEY_HEIGHT, 1280);
+            int containerHeight = widgetConfig.getInt(AppConstant.WIDGET_KEY_HEIGHT, (int) (250 * scale + 0.5f));
             bundle.putInt(ClasstableFragment.CONTAINER_WIDTH, containerWidth);
             bundle.putInt(ClasstableFragment.CONTAINER_HEIGHT, containerHeight);
             bundle.putString(ClasstableFragment.FIRST_WEEK_DATE_STRING, config.getString(context.getString(R.string.setting_classtable_now_week_first_week_start_date_key), ""));
@@ -267,6 +266,7 @@ public class ClasstableWidget extends AppWidgetProvider {
                     classTextview.setTextSize(context.getResources().getInteger(R.integer.classtable_font_size));
                     classTextview.setGravity(Gravity.CENTER);
                     classTextview.setText(claxx.getTitle());
+                    classTextview.setTextColor(fontColor);
 
                     GradientDrawable classBackgroundDrawable = (GradientDrawable) context.getDrawable(R.drawable.classtable_class_background_radius_round_coner);
                     if (classBackgroundDrawable != null) {
@@ -308,7 +308,6 @@ public class ClasstableWidget extends AppWidgetProvider {
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        SharedPreferences config = context.getSharedPreferences(AppConstant.SHARED_PREF_PHONE, MODE_PRIVATE);
         SharedPreferences widgetConfig = context.getSharedPreferences(AppConstant.SHARED_PREF_WIDGET, MODE_PRIVATE);
         float scale = context.getResources().getDisplayMetrics().density;
         SharedPreferences.Editor editor = widgetConfig.edit();
