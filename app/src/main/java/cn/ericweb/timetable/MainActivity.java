@@ -48,12 +48,14 @@ public class MainActivity extends AppCompatActivity {
     // 现在课程表正在展示的周数
     private int weekShowwing;
     private int nowAction;
+    private boolean isInited;
 
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.isInited = false;
         this.nowAction = MainActivity.ACTION_MAIN;
 
         setContentView(R.layout.activity_main);
@@ -100,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        this.cleanMainContainer();
 
         // 设置weekShowwing 为 当前周
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -116,12 +117,17 @@ public class MainActivity extends AppCompatActivity {
         startCalendar.setTime(startDate);
         long temp = (now.getTimeInMillis() - startCalendar.getTimeInMillis()) / (7 * 1000 * 24 * 60 * 60) + 1;
         weekShowwing = (int) temp;
+
+        this.doAction(this.nowAction);
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        this.doAction(this.nowAction);
+        if(isInited == false) {
+            isInited = true;
+            this.doAction(this.nowAction);
+        }
     }
 
     /**

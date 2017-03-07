@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.lang.Class;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
@@ -24,10 +26,9 @@ import java.util.Scanner;
 import cn.ericweb.timetable.domain.*;
 import cn.ericweb.timetable.eframework.ResponseBean;
 import cn.ericweb.timetable.utils.AppConstant;
+import cn.ericweb.timetable.utils.RefreshWidget;
 
 public class QueryClassTable extends AppCompatActivity {
-
-    private Intent intent2Main;
 
     private String startYear;
     private String semester;
@@ -50,15 +51,13 @@ public class QueryClassTable extends AppCompatActivity {
             }
         });
 
-        // 初始化指向main的intent
-        intent2Main = new Intent(this, cn.ericweb.timetable.MainActivity.class);
-
         //初始化查询状态的View的指向
         queryStatus = (TextView) findViewById(R.id.query_status);
 
         this.queryInfo = new QueryInfo();
 
         // 初始化默认的学年学期
+        // TODO: 17-3-7 完成学年学期的功能
         TextView yearTextview = (TextView) findViewById(R.id.query_year_textview);
         TextView semesterTextview = (TextView) findViewById(R.id.query_semester_textview);
         int _semester;
@@ -68,8 +67,6 @@ public class QueryClassTable extends AppCompatActivity {
 
     public void queryClassTable(View button) {
         // 初始化查询信息
-        QueryInfo queryInfo = new QueryInfo();
-
         EditText userIdEditText = (EditText) findViewById(R.id.query_userId);
         EditText pwdEditText = (EditText) findViewById(R.id.query_pwd);
         this.queryInfo.setId(userIdEditText.getText().toString());
@@ -99,10 +96,23 @@ public class QueryClassTable extends AppCompatActivity {
         try {
             Classtable _c = gson.fromJson(jsonClasstable, Classtable.class);
 
+            LinkedList<Integer> colors = new LinkedList<>();
+            Class Rcolor = R.color.class;
+            for(int i = 1 ; i <= 16; i++) {
+                int tmpColor;
+                try {
+                    Field field = Rcolor.getField("colorClasstableBg" + i);
+                    tmpColor = getResources().getColor(field.getInt("colorClasstableBg" + i));
+                } catch (Exception e) {
+                    tmpColor = getResources().getColor(R.color.colorClassBackground);
+                }
+                colors.add(tmpColor);
+            }
+
             LinkedList<Activity> _tmpList = new LinkedList<>();
             for(Activity _claxx : _c.getActivities()) {
                 if(_claxx.getColorBg() == null) {
-                    int _colorInt = getResources().getColor(R.color.colorClassBackground);
+                    int _colorInt = colors.get(_tmpList.size() % 16);
                     int red = (_colorInt & 0xff0000) >> 16;
                     int green = (_colorInt & 0x00ff00) >> 8;
                     int blue = (_colorInt & 0x0000ff);
@@ -168,16 +178,13 @@ public class QueryClassTable extends AppCompatActivity {
             try {
                 result = gson.fromJson(queryResultJson, ResponseBean.class);
                 if (result.sc == ResponseBean.SC_FAIL) {
-                    String errorInfo = "";
-                    try {
-                        QueryLoginResult qlr = gson.fromJson(result.content, QueryLoginResult.class);
-                        errorInfo = qlr.getInfo();
-                    } catch (Exception e) {
-                        errorInfo = "unknown error";
-                    }
+                    String errorInfo;
+                    QueryLoginResult qlr = gson.fromJson(result.content, QueryLoginResult.class);
+                    errorInfo = qlr.getInfo();
                     showErrorInfo(errorInfo);
                 } else {
                     if (setClasstableAndAdditionalInfo2SharedPreference(result.content)) {
+                        RefreshWidget.updateWidgetClasstable(getBaseContext());
                         finish();
                     }
                 }
