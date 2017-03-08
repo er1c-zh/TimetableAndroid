@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Timetable</string>
-    <string name="version_info_simple">v0.4.2.20170307 alpha</string>
-    <string name="version_info_detail">新特性\n1.添加了自动上色功能2.添加了drawerlayout3.添加了课程列表纵览\nbug\n1.虚拟按键与应用之间有一条空白\n2.华为无法在隐藏虚拟按键时重绘（估计华为自己有接口回头看看\n</string>
+
+    <string name="version_info_activity_title">关于</string>
+    <string name="version_info_simple">v0.4.3.20170308 alpha</string>
+    <string name="version_info_title">更新要点</string>
+    <string name="version_info_detail">1.更新了UI设计</string>
+    <string name="version_info_author">Coder : W.eR1c.H</string>
+    <string name="version_info_authors">Thx : Kenny</string>
 
     <!--首页-->
     <string name="title_activity_query_class_table">Query</string>

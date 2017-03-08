@@ -14,7 +14,7 @@ public class VersionInfo extends AppCompatActivity {
         setContentView(R.layout.activity_version_info);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.version_info_toolbar);
-        toolbar.setTitle(R.string.version_info_simple);
+        toolbar.setTitle(getString(R.string.version_info_activity_title));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

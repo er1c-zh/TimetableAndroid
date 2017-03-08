@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        myToolbar.setSubtitle(R.string.version_info_simple);
         setSupportActionBar(myToolbar);
-        myToolbar.setOnMenuItemClickListener(onMenuItemClick);
         myToolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
 
         // 初始化nav
@@ -76,8 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 NavItem navItem = (NavItem) adapterView.getItemAtPosition(i);
                 nowAction =  navItem.getAction();
                 doAction(nowAction);
-                DrawerLayout dl = (DrawerLayout) findViewById(R.id.nav_list_container);
-                dl.closeDrawer(findViewById(R.id.nav_list_linearlayout));
+                closeNav();
             }
         });
 
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         // 防止第一次或清空了数据
         String jsonClasstable = classtableSharedPref.getString(AppConstant.CLASSTABLE_KEY_MAIN, "");
         if (jsonClasstable.equals("")) {
-            showRefresh();
+            showRefresh(null);
         }
         Bundle bundle = new Bundle();
         bundle.putInt(ClasstableFragment.WEEK_TO_SHOW, week2show);
@@ -176,36 +173,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 创建菜单
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    /**
      * 显示重新获取的Activity
      */
-    void showRefresh() {
+    public void showRefresh(View view) {
         Intent intent = new Intent(this, cn.ericweb.timetable.QueryClassTable.class);
         startActivity(intent);
+        closeNav();
     }
 
     /**
      * 显示版本信息
      */
-    void showVersionInfo() {
+    public void showVersionInfo(View view) {
         Intent intent = new Intent(this, cn.ericweb.timetable.VersionInfo.class);
         startActivity(intent);
+        closeNav();
     }
 
     /**
      * 展示设置页面
      */
-    void showSettings() {
+    public void showSettings(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+        closeNav();
     }
 
     private void cleanMainContainer() {
@@ -214,26 +205,11 @@ public class MainActivity extends AppCompatActivity {
         classTableContainerRelative.removeAllViews();
     }
 
-    // 菜单click listener
-    Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.refresh_classtable:
-                    showRefresh();
-                    break;
-                case R.id.version_info:
-                    showVersionInfo();
-                    break;
-                case R.id.settings:
-                    showSettings();
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        }
-    };
+    private void closeNav() {
+        DrawerLayout dl = (DrawerLayout) findViewById(R.id.nav_list_container);
+        dl.closeDrawer(findViewById(R.id.nav_list_linearlayout));
+    }
+
 
     private void doAction(int action) {
         this.cleanMainContainer();
