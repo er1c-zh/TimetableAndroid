@@ -52,6 +52,7 @@
                 android:resource="@xml/classtable_widget_info" />
         </receiver>
 
+        <activity android:name=".AddActActivity"></activity>
     </application>
 
 </manifest>

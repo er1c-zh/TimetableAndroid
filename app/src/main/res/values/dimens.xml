@@ -33,4 +33,7 @@
     <dimen name="subjects_list_item_padding">10dp</dimen>
     <dimen name="subjects_list_title_font_size">20sp</dimen>
     <dimen name="subjects_list_text_font_size">16sp</dimen>
+
+    <!--activity editor-->
+    <dimen name="acty_editor_item_height">48dp</dimen>
 </resources>

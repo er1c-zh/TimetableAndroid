@@ -23,6 +23,8 @@ public class EricRoundedCornerTextview extends TextView {
     private int mBgColor = 0;
     private int mCornerSize = 0;
     private int borderWidth = 0;
+    private int weekday;
+    private int startIndex;
 
     public EricRoundedCornerTextview(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,7 +63,6 @@ public class EricRoundedCornerTextview extends TextView {
         paint.setAntiAlias(true);
         paint.setColor(mBgColor);
 
-//        RectF rec = new RectF(0, 0, w, h);
         RectF rec = new RectF(borderWidth, borderWidth, w - 2 * borderWidth, h - 2 * borderWidth);
 
         c.drawRoundRect(rec, mCornerSize, mCornerSize, paint);
@@ -77,5 +78,21 @@ public class EricRoundedCornerTextview extends TextView {
 
     public void setBorderWidth(int borderWidth) {
         this.borderWidth = borderWidth;
+    }
+
+    public int getWeekday() {
+        return weekday;
+    }
+
+    public void setWeekday(int weekday) {
+        this.weekday = weekday;
+    }
+
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    public void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
     }
 }

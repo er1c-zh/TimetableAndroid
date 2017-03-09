@@ -1,5 +1,7 @@
 package cn.ericweb.timetable.domain;
 
+import cn.ericweb.timetable.utils.StringUtils;
+
 /**
  * 展现于时间表上的所有物体的基类
  * Created by eric on 17-2-21.
@@ -146,5 +148,13 @@ public class Activity {
 
     public void setColorBg(Color colorBg) {
         this.colorBg = colorBg;
+    }
+
+    public String getShowingString() {
+        if(StringUtils.isStringEmpty(this.getLocation())) {
+            return this.getTitle();
+        } else {
+            return this.getTitle() + "@" + this.getLocation();
+        }
     }
 }

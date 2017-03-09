@@ -47,17 +47,39 @@
     <string name="dialog_class_info_teacher_name_hint">教师姓名</string>
     <string name="dialog_class_info_revise_button">修改</string>
 
+    <!--ACTIVITY 编辑器-->
+    <string name="activity_editor_subject_container_title">所属课程</string>
+    <string name="activity_editor_subject_title">所属课程</string>
+    <string name="activity_editor_activity_container_title">活动信息</string>
+    <string name="activity_editor_short_table">标题</string>
+    <string name="activity_editor_location">活动地点</string>
+    <string name="activity_editor_background_color">背景颜色</string>
+    <string name="activity_editor_is_class">是否是课程（与同课程的活动有联动）</string>
+    <string name="activity_editor_time_container_title">时间</string>
+    <string name="activity_editor_time_is_cycle_title">周期性</string>
+    <string name="activity_editor_time_cycle_no_add_title">添加</string>
+    <string name="activity_editor_no_subject_content">不依赖课程</string>
+
     <!--修改附加信息界面-->
     <string name="revise_class_additional_info_confirm">确认修改</string>
-    <string name="revise_class_additional_info_course_name_short_label">课程简称</string>
-    <string name="revise_class_additional_info_class_background_color_id">背景颜色</string>
-    <string name="appwidget_text">课程表</string>
+
+    <!--添加activity-->
+    <string name="add_acty_toolbar_title">新建</string>
+
 
     <string name="action_settings">设置</string>
+    <string name="appwidget_text">课程表</string>
+
 
     <!--导航标题-->
     <string name="nav_title_home">日程表</string>
     <string name="nav_title_exam">考试</string>
     <string name="nav_title_subject">课程纵览</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
+    <!--other-->
+    <string name="switch_on_yes">是</string>
+    <string name="switch_off_no">否</string>
+    <string name="dialog_positive">确认</string>
+    <string name="dialog_cancel">取消</string>
 </resources>

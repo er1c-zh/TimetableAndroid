@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -67,9 +69,16 @@ public class ClasstableFragment extends Fragment {
             Classtable classTable = gson.fromJson(savedInstanceState.getString(CLASSTABLE_JSON), Classtable.class);
 
             // 获得课程表容器并清空
-            LinearLayout classTableContainer = new LinearLayout(getContext());
-            classTableContainer.setOrientation(LinearLayout.VERTICAL);
-            classTableContainer.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 0));
+            CoordinatorLayout cl = (CoordinatorLayout) inflater.inflate(R.layout.fragment_classtable, null);
+            FloatingActionButton fab = (FloatingActionButton) cl.findViewById(R.id.fragment_classtable_fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), AddActActivity.class);
+                    startActivity(intent);
+                }
+            });
+            LinearLayout classTableContainer = (LinearLayout) cl.findViewById(R.id.fragment_classtable_container);
 
             // 获得显示几天一周
             int dayToShow = savedInstanceState.getBoolean(IF_SHOW_WEEKENDS) ? 7 : 5;
@@ -188,7 +197,9 @@ public class ClasstableFragment extends Fragment {
                     classTextview.setBorderWidth(1);
                     classTextview.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
                     classTextview.setGravity(Gravity.CENTER);
-                    classTextview.setText(claxx.getTitle());
+                    classTextview.setText(claxx.getShowingString());
+                    classTextview.setWeekday(_weekday);
+                    classTextview.setStartIndex(_indexStart);
 
                     GradientDrawable classBackgroundDrawable = (GradientDrawable) getContext().getDrawable(R.drawable.classtable_class_background_radius_round_coner);
                     if (classBackgroundDrawable != null) {
@@ -210,8 +221,7 @@ public class ClasstableFragment extends Fragment {
             }
             classTableContainer.addView(classTableRow);
 
-            // Inflate the layout for this fragment
-            return classTableContainer;
+            return cl;
         } catch (Exception e) {
             return null;
         }
@@ -220,7 +230,7 @@ public class ClasstableFragment extends Fragment {
     View.OnClickListener classInfoListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final TextView textView = (TextView) view;
+            final EricRoundedCornerTextview textView = (EricRoundedCornerTextview) view;
 
             AlertDialog.Builder classInfoDialogBuilder = new AlertDialog.Builder(textView.getContext());
 
@@ -237,7 +247,7 @@ public class ClasstableFragment extends Fragment {
             }
 
             for(Activity _s : classtable.getActivities()) {
-                if(_s.getTitle().equals(((TextView) view).getText())) {
+                if(_s.getShowingString().equals(textView.getText()) && _s.getWhichWeekday() == textView.getWeekday() && _s.getStartClassIndex() == textView.getStartIndex()) {
                     _activity = _s;
                     break;
                 }
@@ -253,6 +263,7 @@ public class ClasstableFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(textView.getContext(), ReviseClassAdditionalInfo.class);
                     intent.putExtra(ReviseClassAdditionalInfo.TARGET_SUBJECT, gson.toJson(activity.getSubject()));
+                    intent.putExtra(ReviseClassAdditionalInfo.TARGET_ACTIVITY, gson.toJson(activity));
                     startActivity(intent);
                 }
             };
