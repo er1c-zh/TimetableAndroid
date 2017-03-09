@@ -8,18 +8,7 @@ import cn.ericweb.timetable.utils.StringUtils;
 public class Class extends Activity {
     public Class(Subject subject) {
         this.setSubject(subject);
+        this.setClass(true);
     }
 
-    public String subject2Title() {
-        if (this.getSubject() != null) {
-            StringBuilder titleBuilder = new StringBuilder();
-            titleBuilder.append(this.getSubject().getShortTitle());
-            if (!StringUtils.isStringEmpty(this.getLocation())) {
-                titleBuilder.append("@");
-                titleBuilder.append(this.getLocation());
-            }
-            return titleBuilder.toString();
-        }
-        return "";
-    }
 }
