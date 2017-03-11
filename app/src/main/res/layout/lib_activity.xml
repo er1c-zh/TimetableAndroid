@@ -219,33 +219,28 @@
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/activity_editor_acty_time_cycle_no_container"
-                        android:background="@drawable/eric_border"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <LinearLayout
                             android:id="@+id/activity_editor_acty_time_cycle_no_add_container"
-                            android:background="@color/colorBorderGrey"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/acty_editor_item_height">
                             <TextView
+                                android:text="时间"
                                 android:layout_weight="1"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content" />
-                            <ImageButton
-                                android:id="@+id/activity_editor_acty_time_cycle_no_add_button"
-                                android:background="@color/colorApparent"
-                                android:src="@drawable/ic_add_black_48dp"
-                                android:layout_width="48dp"
-                                android:layout_height="24dp" />
+                            <TextView
+                                android:id="@+id/activity_editor_acty_time_cycle_no_add_content"
+                                android:textAlignment="textEnd"
+                                android:layout_weight="3"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content" />
+
                         </LinearLayout>
-                        <ListView
-                            android:id="@+id/activity_editor_acty_time_cycle_no_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                        </ListView>
                     </LinearLayout>
                     <LinearLayout
                         android:visibility="invisible"

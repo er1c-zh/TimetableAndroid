@@ -120,6 +120,7 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
     }
 
     private void updateAdditionalInfo() {
+
         LinkedList<Activity> oldList = this.classtable.getActivities();
         // 创建新的subject
         this.newSubject = this.oldSubject;
@@ -133,17 +134,23 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
         int alpha = _colorTmp.getAlpha();
         Color newBg = new Color(red, green, blue, alpha);
 
-
-        // location
+        // isclass & location
         LinkedList<Activity> tmpList = new LinkedList<>();
         for(Activity _a : oldList) {
             if(_a.equals(this.activity)) {
                 _a.setLocation(this.locationTextView.getText().toString());
+                this.activity.setLocation(this.locationTextView.getText().toString());
+                if(this.isClassSwitch.isChecked()) {
+                    _a.setClass(true);
+                    this.activity.setClass(true);
+                } else {
+                    _a.setClass(false);
+                    this.activity.setClass(false);
+                }
             }
             tmpList.add(_a);
         }
         this.classtable.setActivities(tmpList);
-        this.activity.setLocation(this.locationTextView.getText().toString());
 
         if(this.activity.isClass()) {
             // 修改缩写
@@ -166,8 +173,6 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
             }
             this.classtable.setActivities(_tmpList);
         } else {
-            // 修改标题
-
             // 修改背景
             LinkedList<Activity> _tmpList = new LinkedList<>();
             for(Activity _a : this.classtable.getActivities()) {

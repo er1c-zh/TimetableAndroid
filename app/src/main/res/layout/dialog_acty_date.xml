@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <NumberPicker
+            android:id="@+id/week_picker"
+            android:descendantFocusability="blocksDescendants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </NumberPicker>
+
+        <NumberPicker
+            android:id="@+id/weekday_picker"
+            android:descendantFocusability="blocksDescendants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <NumberPicker
+            android:id="@+id/start_index_picker"
+            android:descendantFocusability="blocksDescendants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <NumberPicker
+            android:id="@+id/end_index_picker"
+            android:descendantFocusability="blocksDescendants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

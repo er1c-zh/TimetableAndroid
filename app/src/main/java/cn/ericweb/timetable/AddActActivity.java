@@ -6,14 +6,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,8 +38,8 @@ public class AddActActivity extends AppCompatActivity {
     private TextView actLocation;
     private Switch actIsClass;
 
-    private ImageButton noCycleAdd;
-    private ListView noCycleList;
+    private LinearLayout noCycleAddContainer;
+    private TextView noCycleAddContent;
 
 
     @Override
@@ -200,13 +198,68 @@ public class AddActActivity extends AppCompatActivity {
         });
 
         // 非周期性
-        this.noCycleAdd = (ImageButton) findViewById(R.id.activity_editor_acty_time_cycle_no_add_button);
-        this.noCycleList = (ListView) findViewById(R.id.activity_editor_acty_time_cycle_no_list);
+        this.noCycleAddContent = (TextView) findViewById(R.id.activity_editor_acty_time_cycle_no_add_content);
+        this.noCycleAddContainer = (LinearLayout) findViewById(R.id.activity_editor_acty_time_cycle_no_container);
 
-        noCycleAdd.setOnClickListener(new View.OnClickListener() {
+        noCycleAddContent.setText("未选择");
+        noCycleAddContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
 
+                LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_acty_date, null);
+                final NumberPicker weekPicker = (NumberPicker) ll.findViewById(R.id.week_picker);
+                final NumberPicker weekdayPicker = (NumberPicker) ll.findViewById(R.id.weekday_picker);
+                final NumberPicker startIndexPicker = (NumberPicker) ll.findViewById(R.id.start_index_picker);
+                final NumberPicker endIndexPicker = (NumberPicker) ll.findViewById(R.id.end_index_picker);
+
+
+                weekPicker.setMinValue(0);
+                weekPicker.setMaxValue(51);
+                final String[] weeks = new String[52];
+                for(int i = 0; i < 52; i++) {
+                    int tmp = i + 1;
+                    weeks[i] = "第" + tmp + "周";
+                }
+                weekPicker.setDisplayedValues(weeks);
+
+                weekdayPicker.setMinValue(0);
+                weekdayPicker.setMaxValue(6);
+                final String weekdays[] = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
+                weekdayPicker.setDisplayedValues(weekdays);
+                weekdayPicker.setValue(1);
+
+                startIndexPicker.setMinValue(1);
+                startIndexPicker.setMaxValue(classtable.getNumberOfClassPerDay());
+                startIndexPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        endIndexPicker.setMinValue(newVal);
+                    }
+                });
+
+                endIndexPicker.setMinValue(1);
+                endIndexPicker.setMaxValue(classtable.getNumberOfClassPerDay());
+
+                builder.setPositiveButton(R.string.dialog_positive, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        char[] tmp = new char[52];
+                        for(int i = 0; i< 52; i++) {
+                            tmp[i] = '0';
+                        }
+                        tmp[weekPicker.getValue()] = '1';
+                        newActivity.setExistedWeek(new String(tmp));
+                        newActivity.setWhichWeekday(weekdayPicker.getValue());
+                        newActivity.setStartClassIndex(startIndexPicker.getValue());
+                        newActivity.setEndClassIndex(endIndexPicker.getValue());
+
+                        noCycleAddContent.setText(weeks[newActivity.getExistedWeek().indexOf('1')] + " " + weekdays[newActivity.getWhichWeekday()]);
+                    }
+                });
+                AlertDialog dialog = builder.setView(ll).create();
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
             }
         });
     }

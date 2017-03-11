@@ -265,7 +265,7 @@ public class ClasstableWidget extends AppWidgetProvider {
                     classTextview.setBorderWidth(1);
                     classTextview.setTextSize(context.getResources().getInteger(R.integer.classtable_font_size));
                     classTextview.setGravity(Gravity.CENTER);
-                    classTextview.setText(claxx.getTitle());
+                    classTextview.setText(claxx.getShowingString());
                     classTextview.setTextColor(fontColor);
 
                     GradientDrawable classBackgroundDrawable = (GradientDrawable) context.getDrawable(R.drawable.classtable_class_background_radius_round_coner);
