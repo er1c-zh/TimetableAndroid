@@ -14,11 +14,34 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fragment_classtable_fab"
         android:src="@drawable/ic_add_black_48dp"
-        android:onClick="showAddActy"
+        app:fabSize="mini"
         app:backgroundTint="@color/colorBorderGrey"
         app:layout_anchor="@id/fragment_classtable_container"
         app:layout_anchorGravity="bottom|right|end"
-        android:layout_margin="32dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginBottom="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fragment_classtable_fab_next_week"
+        android:src="@drawable/ic_arrow_forward_black_24dp"
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorBorderGrey"
+        app:layout_anchor="@id/fragment_classtable_container"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fragment_classtable_fab_pre_week"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorBorderGrey"
+        app:layout_anchor="@id/fragment_classtable_container"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_marginRight="76dp"
+        android:layout_marginBottom="80dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </android.support.design.widget.CoordinatorLayout>

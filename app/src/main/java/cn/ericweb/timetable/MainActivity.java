@@ -13,6 +13,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,12 +45,17 @@ public class MainActivity extends AppCompatActivity {
     public static final int ACTION_MAIN = 1;
     public static final int ACTION_EXAM = 2;
     public static final int ACTION_SUBJECT = 3;
+    public static final int ACTION_NEXT_WEEK = 4;
+    public static final int ACTION_PRE_WEEK = 5;
 
 
     // 现在课程表正在展示的周数
     private int weekShowwing;
     private int nowAction;
     private boolean isInited;
+
+    // 一些需要的对象
+    private RelativeLayout fragmentContainer;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -94,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = config.edit();
         editor.putInt(AppConstant.PHONE_DENSITY_DPI, densityDpi);
         editor.commit();
+
+        // 初始化私有变量
+        this.fragmentContainer = (RelativeLayout) findViewById(R.id.main_container);
     }
 
     @Override
@@ -210,17 +220,31 @@ public class MainActivity extends AppCompatActivity {
         dl.closeDrawer(findViewById(R.id.nav_list_linearlayout));
     }
 
-
-    private void doAction(int action) {
-        this.cleanMainContainer();
+    public void doAction(int action) {
         switch (action) {
             case MainActivity.ACTION_MAIN:
+                TransitionManager.beginDelayedTransition(fragmentContainer, new Fade());
+                this.cleanMainContainer();
                 this.showTables(weekShowwing);
                 break;
             case MainActivity.ACTION_EXAM:
+                TransitionManager.beginDelayedTransition(fragmentContainer, new Fade());
+                this.cleanMainContainer();
                 break;
             case MainActivity.ACTION_SUBJECT:
+                TransitionManager.beginDelayedTransition(fragmentContainer, new Fade());
+                this.cleanMainContainer();
                 this.showSubjects();
+                break;
+            case MainActivity.ACTION_NEXT_WEEK:
+                this.weekShowwing++;
+                doAction(MainActivity.ACTION_MAIN);
+                break;
+            case MainActivity.ACTION_PRE_WEEK:
+                if(this.weekShowwing > 1) {
+                    this.weekShowwing--;
+                    doAction(MainActivity.ACTION_MAIN);
+                }
                 break;
             default:
                 doAction(MainActivity.ACTION_MAIN);

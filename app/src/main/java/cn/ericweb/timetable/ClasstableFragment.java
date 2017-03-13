@@ -1,10 +1,13 @@
 package cn.ericweb.timetable;
 
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -36,6 +39,7 @@ import java.util.Date;
 //import cn.ericweb.timetable.domain.CourseInClassTable;
 import cn.ericweb.timetable.domain.Activity;
 import cn.ericweb.timetable.domain.Classtable;
+import cn.ericweb.timetable.domain.Subject;
 import cn.ericweb.timetable.ericandroid.EricRoundedCornerTextview;
 import cn.ericweb.timetable.utils.AppConstant;
 
@@ -53,6 +57,9 @@ public class ClasstableFragment extends Fragment {
     public static final String CONTAINER_HEIGHT = "cn.ericweb.ClasstableFragment.containerHeight";
     public static final String FIRST_WEEK_DATE_STRING = "cn.ericweb.ClasstableFragment.firstWeekDateString";
 
+    private Bundle bundle;
+    private ViewGroup container;
+
     public ClasstableFragment() {
         // Required empty public constructor
     }
@@ -63,19 +70,55 @@ public class ClasstableFragment extends Fragment {
                              Bundle savedInstanceState) {
         try {
             savedInstanceState = getArguments();
-            int week2show = savedInstanceState.getInt(WEEK_TO_SHOW);
+
+            this.bundle = savedInstanceState;
+            this.container = container;
+
+            final int week2show = savedInstanceState.getInt(WEEK_TO_SHOW);
             // get课程表
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-ddHH:mm:ss").create();
             Classtable classTable = gson.fromJson(savedInstanceState.getString(CLASSTABLE_JSON), Classtable.class);
 
             // 获得课程表容器并清空
             CoordinatorLayout cl = (CoordinatorLayout) inflater.inflate(R.layout.fragment_classtable, null);
+
+            // init fab
             FloatingActionButton fab = (FloatingActionButton) cl.findViewById(R.id.fragment_classtable_fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), AddActActivity.class);
                     startActivity(intent);
+                }
+            });
+            FloatingActionButton fab_next = (FloatingActionButton) cl.findViewById(R.id.fragment_classtable_fab_next_week);
+            fab_next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity pActivity = (MainActivity) getActivity();
+                    pActivity.doAction(MainActivity.ACTION_NEXT_WEEK);
+                }
+            });
+            FloatingActionButton fab_pre = (FloatingActionButton) cl.findViewById(R.id.fragment_classtable_fab_pre_week);
+            fab_pre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity pActivity = (MainActivity) getActivity();
+                    if(week2show - 1 > 0) {
+                        pActivity.doAction(MainActivity.ACTION_PRE_WEEK);
+                    } else {
+                        final FloatingActionButton _v = (FloatingActionButton) v;
+                        ObjectAnimator alert = ObjectAnimator.ofArgb(_v, "null", getResources().getColor(R.color.colorBorderGrey), Color.RED, getResources().getColor(R.color.colorBorderGrey));
+                        alert.setDuration(300);
+                        alert.start();
+                        alert.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                Integer _c = (Integer) animation.getAnimatedValue();
+                                _v.setBackgroundTintList(ColorStateList.valueOf(_c));
+                            }
+                        });
+                    }
                 }
             });
             LinearLayout classTableContainer = (LinearLayout) cl.findViewById(R.id.fragment_classtable_container);
@@ -188,35 +231,40 @@ public class ClasstableFragment extends Fragment {
                     int _indexEnd = claxx.getEndClassIndex();
                     int _howLong = _indexEnd - _indexStart + 1;
 
-                    RelativeLayout classContainer = new RelativeLayout(getContext());
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(perClassWidth, perClassHeight * _howLong);
-                    lp.setMargins(perClassWidth * (_weekday), perClassHeight * (_indexStart), 0, 0);
-                    classContainer.setLayoutParams(lp);
-                    EricRoundedCornerTextview classTextview = new EricRoundedCornerTextview(getContext());
-                    classTextview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                    classTextview.setBorderWidth(1);
-                    classTextview.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
-                    classTextview.setGravity(Gravity.CENTER);
-                    classTextview.setText(claxx.getShowingString());
-                    classTextview.setWeekday(_weekday);
-                    classTextview.setStartIndex(_indexStart);
+                    if(claxx.isClass()) {
+                        RelativeLayout classContainer = new RelativeLayout(getContext());
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(perClassWidth, perClassHeight * _howLong);
+                        lp.setMargins(perClassWidth * (_weekday), perClassHeight * (_indexStart), 0, 0);
+                        classContainer.setLayoutParams(lp);
+                        EricRoundedCornerTextview classTextview = new EricRoundedCornerTextview(getContext());
+                        classTextview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        classTextview.setBorderWidth(1);
+                        classTextview.setTextSize(getResources().getInteger(R.integer.classtable_font_size));
+                        classTextview.setGravity(Gravity.CENTER);
+                        classTextview.setText(claxx.getShowingString());
+                        classTextview.setWeekday(_weekday);
+                        classTextview.setStartIndex(_indexStart);
 
-                    GradientDrawable classBackgroundDrawable = (GradientDrawable) getContext().getDrawable(R.drawable.classtable_class_background_radius_round_coner);
-                    if (classBackgroundDrawable != null) {
-                        classBackgroundDrawable.setColor(getResources().getColor(R.color.colorClassBackground));
-                        if(claxx.getColorBg() != null) {
-                            cn.ericweb.timetable.domain.Color _c = claxx.getColorBg();
-                            classBackgroundDrawable.setColor(Color.argb(_c.getA(), _c.getR(), _c.getG(), _c.getB()));
+                        GradientDrawable classBackgroundDrawable = (GradientDrawable) getContext().getDrawable(R.drawable.classtable_class_background_radius_round_coner);
+                        if (classBackgroundDrawable != null) {
+                            classBackgroundDrawable.setColor(getResources().getColor(R.color.colorClassBackground));
+                            if(claxx.getColorBg() != null) {
+                                cn.ericweb.timetable.domain.Color _c = claxx.getColorBg();
+                                classBackgroundDrawable.setColor(Color.argb(_c.getA(), _c.getR(), _c.getG(), _c.getB()));
+                            }
                         }
+                        classTextview.setBackground(classBackgroundDrawable);
+
+                        // 添加磁铁的点击功能
+                        classTextview.setOnClickListener(classInfoListener);
+
+                        classContainer.addView(classTextview);
+
+                        classContainerRL.addView(classContainer);
+                    } else {
+                        // 自定义活动的展示
                     }
-                    classTextview.setBackground(classBackgroundDrawable);
 
-                    // 添加磁铁的点击功能
-                    classTextview.setOnClickListener(classInfoListener);
-
-                    classContainer.addView(classTextview);
-
-                    classContainerRL.addView(classContainer);
                 }
             }
             classTableContainer.addView(classTableRow);
@@ -273,11 +321,16 @@ public class ClasstableFragment extends Fragment {
 
             // title
             TextView classTitle = (TextView) content.findViewById(R.id.className);
-            classTitle.setText(activity.getSubject().getTitle());
+            classTitle.setText(activity.getTitle());
 
-            // short course name
-            TextView shortCourseName = (TextView) content.findViewById(R.id.shortClassName);
-            shortCourseName.setText(activity.getSubject().getShortTitle());
+            // subject
+            TextView shortCourseName = (TextView) content.findViewById(R.id.subject);
+            Subject _s = activity.getSubject();
+            if(_s != null) {
+                shortCourseName.setText(_s.getTitle());
+            } else {
+                shortCourseName.setText(getString(R.string.activity_editor_no_subject_content));
+            }
 
             // address
             TextView address = (TextView) content.findViewById(R.id.classAddress);

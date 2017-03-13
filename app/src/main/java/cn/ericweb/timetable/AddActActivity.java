@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -26,6 +28,7 @@ import cn.ericweb.timetable.domain.Classtable;
 import cn.ericweb.timetable.domain.Color;
 import cn.ericweb.timetable.domain.Subject;
 import cn.ericweb.timetable.utils.AppConstant;
+import cn.ericweb.timetable.utils.RefreshWidget;
 
 public class AddActActivity extends AppCompatActivity {
     private Activity newActivity;
@@ -36,6 +39,10 @@ public class AddActActivity extends AppCompatActivity {
     private TextView subject;
     private TextView actTitle;
     private TextView actLocation;
+    private LinearLayout bgColorContainer;
+    private TextView newBackgroundColor;
+
+
     private Switch actIsClass;
 
     private LinearLayout noCycleAddContainer;
@@ -59,6 +66,21 @@ public class AddActActivity extends AppCompatActivity {
                 finish();
             }
         });
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.revise_additional_info_sure:
+                        create();
+                        finish();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+        toolbar.setCollapsible(true);
 
         // init classtable
         SharedPreferences classtableSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, MODE_PRIVATE);
@@ -115,8 +137,8 @@ public class AddActActivity extends AppCompatActivity {
         });
 
         // bgcolor
-        LinearLayout bgColorContainer = (LinearLayout) findViewById(R.id.activity_editor_acty_background_color_container);
-        final TextView newBackgroundColor = (TextView) findViewById(R.id.activity_editor_acty_background_color_content);
+        this.bgColorContainer = (LinearLayout) findViewById(R.id.activity_editor_acty_background_color_container);
+        this.newBackgroundColor = (TextView) findViewById(R.id.activity_editor_acty_background_color_content);
         int _tmpColor = getResources().getColor(R.color.colorClassBackground);
         this.newActivity.setColorBg(new Color(255, android.graphics.Color.red(_tmpColor), android.graphics.Color.green(_tmpColor), android.graphics.Color.blue(_tmpColor)));
         newBackgroundColor.setBackgroundColor(_tmpColor);
@@ -248,7 +270,7 @@ public class AddActActivity extends AppCompatActivity {
                         for(int i = 0; i< 52; i++) {
                             tmp[i] = '0';
                         }
-                        tmp[weekPicker.getValue()] = '1';
+                        tmp[weekPicker.getValue() + 1] = '1';
                         newActivity.setExistedWeek(new String(tmp));
                         newActivity.setWhichWeekday(weekdayPicker.getValue());
                         newActivity.setStartClassIndex(startIndexPicker.getValue());
@@ -262,5 +284,40 @@ public class AddActActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_only_sure, menu);
+        return true;
+    }
+
+    private void create() {
+        this.newActivity.setTitle(this.actTitle.getText().toString());
+        this.newActivity.setClass(this.actIsClass.isChecked());
+        for(Subject _s : this.classtable.getSubjects()) {
+            if(_s.getTitle().equals(this.subject.getText().toString())) {
+                this.newActivity.setSubject(_s);
+            }
+        }
+
+        this.newActivity.setLocation(this.actLocation.getText().toString());
+
+        LinkedList<Activity> tmp = this.classtable.getActivities();
+        tmp.add(this.newActivity);
+        this.classtable.setActivities(tmp);
+
+        SharedPreferences classtableSharedPref = getSharedPreferences(AppConstant.SHARED_PREF_CLASSTABLE, MODE_PRIVATE);
+        try {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-ddHH:mm:ss").create();
+            SharedPreferences.Editor editor = classtableSharedPref.edit();
+            editor.putString(AppConstant.CLASSTABLE_KEY_MAIN, gson.toJson(this.classtable));
+            editor.commit();
+
+            // 更新widget
+            RefreshWidget.updateWidgetClasstable(getApplicationContext());
+        } catch (Exception e) {
+            finish();
+        }
     }
 }

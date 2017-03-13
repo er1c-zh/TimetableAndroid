@@ -21,18 +21,14 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.w3c.dom.Text;
-
 import java.util.LinkedList;
 
 import cn.ericweb.timetable.domain.Activity;
-import cn.ericweb.timetable.domain.Class;
 import cn.ericweb.timetable.domain.Classtable;
 import cn.ericweb.timetable.domain.Color;
 import cn.ericweb.timetable.domain.Subject;
 import cn.ericweb.timetable.utils.AppConstant;
 import cn.ericweb.timetable.utils.RefreshWidget;
-import cn.ericweb.timetable.utils.StringUtils;
 
 public class ReviseClassAdditionalInfo extends AppCompatActivity {
     public static final String TARGET_SUBJECT = "cn.ericweb.ReviseClassAdditionalInfo.target_subject";
@@ -115,7 +111,7 @@ public class ReviseClassAdditionalInfo extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_revise_class_additional_info, menu);
+        getMenuInflater().inflate(R.menu.menu_only_sure, menu);
         return true;
     }
 

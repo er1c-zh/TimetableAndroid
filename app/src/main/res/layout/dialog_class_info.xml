@@ -9,14 +9,14 @@
         android:id="@+id/className"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/dialog_class_info_course_name_hint"
+        android:hint="@string/dialog_class_info_title"
         android:padding="@dimen/padding_top_or_bottom" />
 
     <TextView
-        android:id="@+id/shortClassName"
+        android:id="@+id/subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/dialog_class_info_course_name_short_hint"
+        android:hint="@string/dialog_class_info_subject"
         android:padding="@dimen/padding_top_or_bottom" />
 
     <TextView

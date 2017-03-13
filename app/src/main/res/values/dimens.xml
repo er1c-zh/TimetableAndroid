@@ -36,4 +36,7 @@
 
     <!--activity editor-->
     <dimen name="acty_editor_item_height">48dp</dimen>
+
+    <!--fab size-->
+    <dimen name="fab_size_mini">32dp</dimen>
 </resources>
